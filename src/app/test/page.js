@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useState, useRef } from 'react';
-import { oct8 } from '../../lists/oct8.js';
+import { currentList } from '../../lists/currentList.js';
 
 import styles from './page.module.scss';
 import Link from 'next/link.js';
@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeUp, faBullhorn, faMegaphone } from '@fortawesome/free-solid-svg-icons';
 
 const Page = () => {
-    const list = oct8;
+    const list = currentList;
     const [nextMondayDate, setNextMondayDate] = useState('');
     const [wordCount, setWordCount] = useState(0);
     const [currentWord, setCurrentWord] = useState('');
