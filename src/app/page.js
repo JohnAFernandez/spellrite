@@ -11,7 +11,7 @@ export default function Home() {
                 <h3>Directions:</h3>
                 <ol>
                     <li>
-                        Press <em>start</em> to begin this week's test
+                        Press <em>start</em> to begin this week&apos;s test
                     </li>
                     <li>Practice as many times as you want!</li>
                 </ol>
@@ -90,3 +90,5 @@ export default function Home() {
         </div>
     );
 }
+
+
