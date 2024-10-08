@@ -8,7 +8,7 @@ import Image from 'next/image.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeUp, faBullhorn, faMegaphone } from '@fortawesome/free-solid-svg-icons';
 
-const page = () => {
+const Page = () => {
     const list = oct8;
     const [nextMondayDate, setNextMondayDate] = useState('');
     const [wordCount, setWordCount] = useState(0);
