@@ -1,3 +1,18 @@
+// Theme colors:
+// offwhite: #e5e3e1
+// lightGrey: #989491
+// brown: #5f4b2a
+// forestGreen: #3c401a
+// black: #171006
+//https://bejamas.io/blog/minimalist-color-palette-and-typography-in-web-design
+
+// don't use above, use this:
+// oceanBlue: #0079FF
+// lightGreen: #00DFA2
+// canary: #F6FA70
+// magenta: #FF0060
+// https://colorhunt.co/palettes/kids
+
 .main {
     display: flex;
     flex-direction: column;
@@ -6,12 +21,24 @@
 }
 
 .test {
-    height: 80vh;
+    height: 60vh;
+    min-width: 285px;
+    padding: 0.5rem 1rem;
+    margin-top: 0.5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding-block: 5rem;
+    justify-content: start;
+    padding-block: 1rem;
+    background-color: #0079FF;
+    border-radius: 4%;
+    color: #171006;
+}
+
+.inputContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .title {
@@ -24,6 +51,17 @@
     font-size: 2rem;
     caret-color: greenyellow;
     padding-inline: 1rem;
+
+    outline: none;
+    border: 2px solid #5f4b2a; /* Add a custom border */
+    border-radius: 0.5rem;
+
+    /* Add custom focus styles */
+    &:focus {
+        border-color: #3c401a; /* Change border color on focus */
+        box-shadow: 0 0 5px rgba(60, 64, 26, 0.6); /* Optional: subtle glow */
+    }
+  
 }
 
 .word {
@@ -31,13 +69,14 @@
 }
 
 .btn {
+    margin-top: 1rem;
     color: white;
-    background-color: blue;
+    background-color: #00DFA2;
     border-color: transparent;
     border-radius: 1rem;
     width: 11rem;
     height: 3rem;
-
+    font-size: 1.75rem;
 }
 
 .buttons {
@@ -48,7 +87,7 @@
 
 .nextBtn {
     color: white;
-    background-color: blue;
+    background-color: #00DFA2;
     border-color: transparent;
     border-radius: 1rem;
     width: 8rem;
@@ -60,7 +99,7 @@
 
 .repeatBtn {
     color: white;
-    background-color: blue;
+    background-color: #00DFA2;
     border-color: transparent;
     border-radius: 1rem;
     width: 8rem;
@@ -70,4 +109,40 @@
 
 .subtitle {
     margin-block: 1rem;
+}
+
+.inputContainer {
+    display: flex;
+    align-items: center;
+}
+
+.input {
+    flex: 1;
+    padding-right: 40px;
+    /* To make room for the button */
+}
+
+.micButton {
+    // position: relative;
+    // right: 40px;
+    // background: none;
+    height: 5rem;
+    width: 5rem;
+    padding: 0.5rem 0.5rem;
+    margin: 1rem;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    font-size: 1.8rem;
+    background-color: #FF0060;
+}
+
+.clearButton {
+    position: relative;
+
+    transform: translateX(-33px);
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
 }

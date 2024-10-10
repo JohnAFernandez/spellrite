@@ -6,7 +6,7 @@ import styles from './page.module.scss';
 import Link from 'next/link.js';
 import Image from 'next/image.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faVolumeUp, faBullhorn, faMegaphone } from '@fortawesome/free-solid-svg-icons';
+import { faVolumeUp, faBullhorn, faMegaphone, faMicrophone, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 
 const Page = () => {
     const list = currentList;
@@ -20,8 +20,63 @@ const Page = () => {
     const [mainBtnMessage, setMainBtnMessage] = useState('Start');
     const [voices, setVoices] = useState([]);
     const [selectedVoice, setSelectedVoice] = useState(null)
+    const [isListening, setIsListening] = useState('false');
     const inputRef = useRef(null);
 
+    useEffect(() => {
+        if (isListening) {
+            startSpeechRecognition();
+        }
+    }, [isListening]);
+    const startSpeechRecognition = () => {
+        // Check if browser supports SpeechRecognition API
+        if (!('webkitSpeechRecognition' in window)) {
+            alert('Speech recognition is not supported by your browser.');
+            return;
+        }
+
+        const recognition = new window.webkitSpeechRecognition();
+        recognition.lang = 'en-US'; // Set the language
+        recognition.interimResults = false; // Get only final results
+        recognition.continuous = false; // Stop recognition after result
+
+        recognition.onstart = () => {
+            console.log('Voice recognition started');
+        };
+
+        recognition.onresult = (event) => {
+            const spokenText = event.results[0][0].transcript;
+            const recognizedLetters = spokenText.trim().toUpperCase().split(" ");
+
+            // Filter and process only individual letters
+            let newInput = '';
+            recognizedLetters.forEach((letter) => {
+                if (/^[A-Z]$/.test(letter)) {
+                    newInput += letter; // Build new input with valid letters
+                } else {
+                    console.log("Ignored non-letter input:", letter);
+                }
+            });
+
+            // Replace the current input with the recognized letters
+            setUserInput(newInput);
+        };
+
+        recognition.onerror = (event) => {
+            console.error('Error occurred in recognition:', event.error);
+        };
+
+        recognition.onend = () => {
+            console.log('Voice recognition ended');
+            setIsListening(false); // Stop listening after recognition ends
+        };
+
+        recognition.start(); // Start speech recognition
+    };
+
+    const handleMicrophoneClick = () => {
+        setIsListening(true); // Start listening when microphone button is clicked
+    };
     useEffect(() => {
         const handleVoicesChanged = () => {
             const availableVoices = window.speechSynthesis.getVoices();
@@ -80,6 +135,7 @@ const Page = () => {
         setIsTesting(true);
         setCurrentWord(list[0]);
         setWordCount(0);
+        setScore(0);
         playWord(list[0]);
         if (inputRef.current) {
             inputRef.current.focus();
@@ -122,11 +178,31 @@ const Page = () => {
         setUserInput(event.target.value);
     }
 
+    const handleClearInput = () => {
+        setUserInput(''); // Clear the input when 'X' button is clicked
+    };
+
+    // const playWord = (word) => {
+    //     const speech = new SpeechSynthesisUtterance(word);
+    //     if (selectedVoice) {
+    //         speech.voice = selectedVoice;
+    //     }
+    //     window.speechSynthesis.speak(speech);
+    // };
     const playWord = (word) => {
         const speech = new SpeechSynthesisUtterance(word);
-        if (selectedVoice) {
-            speech.voice = selectedVoice;
-        }
+
+        // Choose a more natural voice by default
+        const naturalVoice = voices.find(voice =>
+            voice.name.includes("Google US English") ||
+            voice.name.includes("Google UK English") ||
+            voice.name.includes("Microsoft Zira") || // Microsoft's natural voices
+            voice.name.includes("Microsoft David")   // Another option
+        );
+
+        // Set selectedVoice or fallback to naturalVoice
+        speech.voice = selectedVoice || naturalVoice || voices[1]; // Fallback to the first available voice
+        speech.rate = 0.85;
         window.speechSynthesis.speak(speech);
     };
 
@@ -136,29 +212,43 @@ const Page = () => {
 
     return (
         <main className={styles.main}>
-            <h1 className={styles.title}><Link href='/'>SpellRite</Link></h1>
+            <h1 className={styles.title}><Link href='/'>5th Grade Spelling</Link></h1>
             {!isTesting && <h3>
                 Test for the week of {nextMondayDate}
             </h3>}
             <div>Score: <span>{score}/{wordCount}</span></div>
-            <div className={styles.test}>
-
-                {!isTesting && <button className={styles.btn} onClick={
+            {!isTesting && <button className={styles.btn} onClick={
                     startTest
                 }>{mainBtnMessage}</button>}
+            {isTesting && <div className={styles.test}>
 
-                {isTesting && <div>
+                
+
+                {isTesting && <div className={styles.inputContainer}>
 
                     <h4 className={styles.subtitle}>Type the word here:</h4>
-                    <input
-                        type="text"
-                        className={styles.input}
-                        value={userInput}
-                        onChange={handleInputChange}
-                        placeholder=""
-                        ref={inputRef}
+                    <div>
+                        <input
+                            type="text"
+                            className={styles.input}
+                            value={userInput}
+                            onChange={handleInputChange}
+                            placeholder=""
+                            ref={inputRef}
+                            spellcheck="false"
+                        />
+                        {userInput && (
+                            <button className={styles.clearButton} onClick={handleClearInput}>
+                                <FontAwesomeIcon icon={faTimesCircle} />
+                            </button>
+                        )}
+                    </div>
+                    <button className={styles.micButton} onClick={handleMicrophoneClick}>
+                        <FontAwesomeIcon icon={faMicrophone} />
+                    </button>
+                </div>
 
-                    /></div>}
+                }
                 {isTesting && <div className={styles.buttons}>
                     <button onClick={repeatWord} className={styles.repeatBtn}>
                         <h4>Repeat Word</h4>
@@ -173,7 +263,7 @@ const Page = () => {
                         return (<li key={index} className='word'>{word}</li>)
                     })}
                 </ol> */}
-            </div>
+            </div>}
         </main>
     )
 }
