@@ -88,7 +88,7 @@ export default function Home() {
                         width={55}
                         height={55}
                     /></div>
-                <div>Mrs. Hvattum's 5th Grade →</div>
+                <div>Mrs. Hvattum&apos;s 5th Grade →</div>
                 {/* </a> */}
             </footer>
         </div>
