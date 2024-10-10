@@ -179,7 +179,7 @@ const Page = () => {
     }
 
     const handleClearInput = () => {
-        setUserInput(''); // Clear the input when 'X' button is clicked
+        setUserInput('');
     };
 
     // const playWord = (word) => {
@@ -199,12 +199,12 @@ const Page = () => {
         //     voice.name.includes("Microsoft David")   // Another option
         // );
         const usVoice = voices.find(voice =>
-            voice.lang === 'en-US' && 
+            voice.lang === 'en-US' &&
             (voice.name.includes("Google US English") || voice.name.includes("Microsoft David") || voice.name.includes("Samantha"))
         );
 
-        // Set selectedVoice or fallback to naturalVoice
-        speech.voice = selectedVoice || naturalVoice || voices[1]; // Fallback to the first available voice
+
+        speech.voice = selectedVoice || usVoice || voices.find(voice => voice.lang === 'en-US');
         speech.rate = 0.85;
         window.speechSynthesis.speak(speech);
     };
@@ -221,11 +221,11 @@ const Page = () => {
             </h3>}
             <div>Score: <span>{score}/{wordCount}</span></div>
             {!isTesting && <button className={styles.btn} onClick={
-                    startTest
-                }>{mainBtnMessage}</button>}
+                startTest
+            }>{mainBtnMessage}</button>}
             {isTesting && <div className={styles.test}>
 
-                
+
 
                 {isTesting && <div className={styles.inputContainer}>
 
@@ -247,7 +247,7 @@ const Page = () => {
                         )}
                     </div>
                     <button className={styles.micButton} onClick={handleMicrophoneClick}>
-                        <FontAwesomeIcon icon={faMicrophone} />
+                        <FontAwesomeIcon icon={faMicrophone} style={{ color: "#ffffff" }} />
                     </button>
                 </div>
 
