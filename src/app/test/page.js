@@ -106,7 +106,7 @@ const Page = () => {
 
 
     useEffect(() => {
-        // Function to get the date of next Monday
+
         function getNextMonday() {
             const today = new Date();
 
@@ -114,13 +114,13 @@ const Page = () => {
 
             let daysUntilNextMonday;
             if (dayOfWeek === 0) {
-                // If today is Sunday, get the Monday of the upcoming week
+  
                 daysUntilNextMonday = 1;
             } else if (dayOfWeek === 1 || dayOfWeek === 2) {
-                // If today is Monday or Tuesday, get the current week's Monday
+  
                 daysUntilNextMonday = 0;
             } else {
-                // For other days, get the Monday of the next week
+ 
                 daysUntilNextMonday = (8 - dayOfWeek) % 7;
             }
 
@@ -216,9 +216,9 @@ const Page = () => {
     return (
         <main className={styles.main}>
             <h1 className={styles.title}><Link href='/'>5th Grade Spelling</Link></h1>
-            {!isTesting && <h3>
+            {/* {!isTesting && <h3>
                 Test for the week of {nextMondayDate}
-            </h3>}
+            </h3>} */}
             <div>Score: <span>{score}/{wordCount}</span></div>
             {!isTesting && <button className={styles.btn} onClick={
                 startTest

@@ -14,7 +14,7 @@ export default function Home() {
     paddingLeft: 0}}>
         <li>Check back each week for an updated word list.</li>
                     <li>
-                        Press <em>GO</em> to begin this week&apos;s test!
+                        Press <span style={{color: "#ffffff"}}><em>GO</em></span> to begin this week&apos;s test!
                     </li>
                     
                 </ul>
