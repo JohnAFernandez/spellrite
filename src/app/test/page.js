@@ -192,12 +192,15 @@ const Page = () => {
     const playWord = (word) => {
         const speech = new SpeechSynthesisUtterance(word);
 
-        // Choose a more natural voice by default
-        const naturalVoice = voices.find(voice =>
-            voice.name.includes("Google US English") ||
-            voice.name.includes("Google UK English") ||
-            voice.name.includes("Microsoft Zira") || // Microsoft's natural voices
-            voice.name.includes("Microsoft David")   // Another option
+        // const naturalVoice = voices.find(voice =>
+        //     voice.name.includes("Google US English") ||
+        //     // voice.name.includes("Google UK English") ||
+        //     voice.name.includes("Microsoft Zira") || // Microsoft's natural voices
+        //     voice.name.includes("Microsoft David")   // Another option
+        // );
+        const usVoice = voices.find(voice =>
+            voice.lang === 'en-US' && 
+            (voice.name.includes("Google US English") || voice.name.includes("Microsoft David") || voice.name.includes("Samantha"))
         );
 
         // Set selectedVoice or fallback to naturalVoice

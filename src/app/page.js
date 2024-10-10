@@ -18,7 +18,7 @@ export default function Home() {
                     </li>
                     
                 </ul>
-                <button style={{backgroundColor: "#00DFA2", outline: "none", border: "none", padding: "0.5rem 1rem", borderRadius: "0.5rem"}}><Link href='/test'>GO</Link></button>
+                <button style={{backgroundColor: "#00DFA2", outline: "none", border: "none", padding: "0.5rem 1rem", borderRadius: "0.5rem", fontSize: "2rem"}}><Link href='/test'>GO</Link></button>
                 {/* <div className={styles.ctas}>
                     <h1>SpellRite</h1>
                     <a
