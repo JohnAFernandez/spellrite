@@ -29,6 +29,10 @@ const Page = () => {
         }
     }, [isListening]);
 
+    const handleMicrophoneClick = () => {
+        setIsListening(true); // Start listening when microphone button is clicked
+    };
+
     const startSpeechRecognition = () => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -76,9 +80,7 @@ const Page = () => {
         recognition.start(); // Start speech recognition
     };
 
-    const handleMicrophoneClick = () => {
-        setIsListening(true); // Start listening when microphone button is clicked
-    };
+
     useEffect(() => {
         const handleVoicesChanged = () => {
             const availableVoices = window.speechSynthesis.getVoices();
