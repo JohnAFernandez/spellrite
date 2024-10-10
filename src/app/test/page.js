@@ -28,9 +28,11 @@ const Page = () => {
             startSpeechRecognition();
         }
     }, [isListening]);
+
     const startSpeechRecognition = () => {
-        // Check if browser supports SpeechRecognition API
-        if (!('webkitSpeechRecognition' in window)) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+        if (!SpeechRecognition) {
             alert('Speech recognition is not supported by your browser.');
             return;
         }
@@ -114,13 +116,13 @@ const Page = () => {
 
             let daysUntilNextMonday;
             if (dayOfWeek === 0) {
-  
+
                 daysUntilNextMonday = 1;
             } else if (dayOfWeek === 1 || dayOfWeek === 2) {
-  
+
                 daysUntilNextMonday = 0;
             } else {
- 
+
                 daysUntilNextMonday = (8 - dayOfWeek) % 7;
             }
 
