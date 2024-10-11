@@ -32,6 +32,7 @@
 //     }
 // }
 
+import { google } from 'googleapis';
 import { SpeechClient } from '@google-cloud/speech';
 const fs = require('fs');
 
