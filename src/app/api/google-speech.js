@@ -6,12 +6,12 @@ export default async function handler(req, res) {
   }
 
   const client = new SpeechClient();
-
-  const audioData = req.body.audioData;
+  
+  const audioBytes = Uint8Array.from(req.body.audioData).buffer;
 
   const request = {
     audio: {
-      content: audioData,
+      content: Buffer.from(audioBytes).toString('base64'), // Encode the audio data
     },
     config: {
       encoding: 'LINEAR16',
@@ -22,7 +22,9 @@ export default async function handler(req, res) {
 
   try {
     const [response] = await client.recognize(request);
-    const transcription = response.results.map(result => result.alternatives[0].transcript).join('\n');
+    const transcription = response.results
+      .map(result => result.alternatives[0].transcript)
+      .join('\n');
     res.status(200).json({ transcript: transcription });
   } catch (error) {
     console.error('Error with Google Speech-to-Text:', error);
