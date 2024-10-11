@@ -141,6 +141,7 @@ export async function POST(req) {
 
     } catch (error) {
         console.error('Error with Google Speech-to-Text:', error);
+        console.error(`here is the email: ${client_email}`);
         return new Response(JSON.stringify({ error: 'Failed to process speech' }), {
             status: 500,
             headers: {
