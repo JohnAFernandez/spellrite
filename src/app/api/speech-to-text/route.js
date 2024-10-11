@@ -111,7 +111,7 @@
 import { google } from 'googleapis';
 import { Readable } from 'stream';
 
-export default async function handler(req, res) {
+export async function POST(req, res) {
     try {
         const { audioData } = req.body;
 
