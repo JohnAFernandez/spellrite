@@ -61,7 +61,7 @@ export async function POST(req) {
 
     await authClient.authorize();
 
-    const client = new SpeechClient({ auth: authClient });
+    const client = new SpeechClient();
 
     try {
         const { audioData } = await req.json();
