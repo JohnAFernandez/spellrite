@@ -31,6 +31,7 @@ const Page = () => {
     }, [isListening]);
 
     const handleMicrophoneClick = () => {
+        setUserInput('');
         setIsListening(true); // Start listening when microphone button is clicked
     };
 
@@ -119,22 +120,34 @@ const Page = () => {
         //     recognition.interimResults = false;
         //     recognition.continuous = false;
 
-        //     recognition.onresult
-        //         = (event) => {
-        //             let spokenText = event.results[0][0].transcript;
+        //     recognition.onresult = (event) => {
+        //         // Get the spoken text from the event and trim any extra spaces
+        //         const spokenText = event.results[0][0].transcript.trim().toUpperCase();
+        //         console.log(`Spoken Text: "${spokenText}"`);
 
-        //             // Filter out only individual letters (A-Z) and ignore any other input like spaces, numbers, etc.
-        //             let recognizedLetters = spokenText.toUpperCase().split('').filter(char => /^[A-Z]$/.test(char));
+        //         // Split the spoken text by spaces (it might be more than one letter if the system misinterprets)
+        //         const recognizedLetters = spokenText.split(/\s+/); // Split by any whitespace
+        //         console.log("Recognized Letters:", recognizedLetters);
 
-        //             // Join letters without any spaces
-        //             let newInput = recognizedLetters.join('');
+        //         let newInput = ''; // Initialize empty string for valid letters
 
-        //             // Set the filtered input back to the user input state
-        //             setUserInput(newInput);
-        //         };
+        //         // Iterate over the recognized input and filter out anything that isn't a single letter
+        //         recognizedLetters.forEach((letter) => {
+        //             // Ensure only single letters (A-Z) are accepted
+        //             if (/^[A-Z]$/.test(letter)) {
+        //                 newInput += letter; // Append valid letters to the new input
+        //             } else {
+        //                 console.log("Ignored non-letter or multi-letter input:", letter);
+        //             }
+        //         });
 
-        //     recognition.onerror = (event) => {
-        //         console.error('Error occurred in recognition:', event.error);
+        //         if (newInput) {
+        //             // If we recognized valid letters, append them to the current input
+        //             setUserInput(prevInput => prevInput + newInput);
+        //             console.log(`New User Input: ${newInput}`);
+        //         } else {
+        //             console.log("No valid letters recognized.");
+        //         }
         //     };
 
         //     recognition.onend = () => {
@@ -177,11 +190,29 @@ const Page = () => {
 
                 console.log(`received from backend::: ${transcript}`);
 
-                // Filter and handle letters as we did for desktop SpeechRecognition
-                let recognizedLetters = (transcript || "").toUpperCase().split('').filter(char => /^[A-Z]$/.test(char));
-                console.log(`RECOGNIZED LETTERS::: ${recognizedLetters}`);
-                let newInput = recognizedLetters.join('');
-                setUserInput(newInput);
+                // Process the transcript and split into separate "words" (in case multiple words are spoken)
+                const recognizedLetters = (transcript || "").toUpperCase().split(/\s+/); // Split by spaces or multiple spaces
+                console.log("Recognized Letters from backend:", recognizedLetters);
+
+                let newInput = ''; // Initialize an empty string to build valid input
+
+                // Iterate through the recognized letters and filter for valid single letters only
+                recognizedLetters.forEach((letter) => {
+                    // Accept only single alphabet letters (A-Z)
+                    if (/^[A-Z]$/.test(letter)) {
+                        newInput += letter; // Append valid letters to the new input
+                    } else {
+                        console.log("Ignored non-letter or multi-letter input:", letter);
+                    }
+                });
+
+                if (newInput) {
+                    // If valid letters were recognized, append them to the existing user input
+                    setUserInput(prevInput => prevInput + newInput);
+                    console.log(`New User Input: ${newInput}`);
+                } else {
+                    console.log("No valid letters recognized from the backend.");
+                }
             } catch (error) {
                 console.error('Error fetching transcript:', error);
             }
