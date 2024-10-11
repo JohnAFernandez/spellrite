@@ -34,21 +34,20 @@
 
 import { google } from 'googleapis';
 import { SpeechClient } from '@google-cloud/speech';
-const fs = require('fs');
 
-const serviceAccount = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON);
+// const serviceAccount = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON);
 
-const client = new google.auth.JWT({
-    email: serviceAccount.client_email,
-    key: serviceAccount.private_key,
-    scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-});
+// const client = new google.auth.JWT({
+//     email: serviceAccount.client_email,
+//     key: serviceAccount.private_key,
+//     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+// });
 
-const authClient = new google.auth.JWT({
-    email: serviceAccount.client_email,
-    key: serviceAccount.private_key,
-    scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-});
+// const authClient = new google.auth.JWT({
+//     email: serviceAccount.client_email,
+//     key: serviceAccount.private_key,
+//     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+// });
 
 export async function POST(req) {
     if (req.method !== 'POST') {
