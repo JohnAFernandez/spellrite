@@ -69,10 +69,7 @@ export async function POST(req) {
         // const serviceAccount = JSON.parse(serviceAccountJson);
 
         const client = new SpeechClient({
-            credentials: {
-                client_email: serviceAccount.client_email,
-                private_key: serviceAccount.private_key,
-            }
+            credentials: serviceAccount
         });
 
         const { audioData } = await req.json();
