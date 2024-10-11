@@ -32,89 +32,130 @@
 //     }
 // }
 
-import { SpeechClient } from '@google-cloud/speech';
-const fs = require('fs');
+// import { SpeechClient } from '@google-cloud/speech';
+// const fs = require('fs');
 
 
 
-// Use a named export for the POST method
-export async function POST(req) {
-    if (req.method !== 'POST') {
-        return new Response(JSON.stringify({ message: 'Only POST requests are allowed' }), {
-            status: 405,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-    }
+// // Use a named export for the POST method
+// export async function POST(req) {
+//     if (req.method !== 'POST') {
+//         return new Response(JSON.stringify({ message: 'Only POST requests are allowed' }), {
+//             status: 405,
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             },
+//         });
+//     }
 
-    const client = new SpeechClient();
+//     const client = new SpeechClient();
 
+//     try {
+//         const { audioData } = await req.json();
+//         console.log("Received audioData:", audioData);
+//         const audioBytes = Uint8Array.from(audioData).buffer;
+//         console.log("Converted audioBytes to Buffer:", audioBytes);
+
+//         const request = {
+//             audio: {
+//                 content: Buffer.from(audioBytes).toString('base64'), // Encode the audio data
+//             },
+//             config: {
+//                 encoding: 'LINEAR16',
+//                 // sampleRateHertz: 48000,
+//                 languageCode: 'en-US',
+//             },
+//         };
+//         console.log("Sending request to Google Speech-to-Text:", request);
+//         // Process the request with Google Speech-to-Text
+
+//         const [response] = await client.recognize(request);
+//         console.log("Google Cloud Speech-to-Text response:", response);
+
+//         if (response && response.results && response.results.length > 0) {
+//             const transcription = response.results
+//                 .map(result => (result.alternatives && result.alternatives.length > 0)
+//                     ? result.alternatives[0].transcript
+//                     : '')
+//                 .join('\n');
+//             console.log("Transcription received:", transcription);
+//         } else {
+//             console.log("No transcription found.");
+//         }
+//         console.log("Google Cloud Speech-to-Text response:", response);
+
+//         const transcription = response.results
+//             .map(result => result.alternatives[0].transcript)
+//             .join('\n');
+
+//         console.log("Transcription received:", transcription);
+
+//         return new Response(JSON.stringify({ transcript: transcription }), {
+//             status: 200,
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             },
+//         });
+
+//     } catch (error) {
+//         console.error('Error with Google Speech-to-Text:', error);
+//         return new Response(JSON.stringify({ error: 'Failed to process speech' }), {
+//             status: 500,
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             },
+//         });
+//     }
+// }
+
+import { google } from 'googleapis';
+import { Readable } from 'stream';
+
+export default async function handler(req, res) {
     try {
-        const { audioData } = await req.json();
-        console.log("Received audioData:", audioData);
-        const audioBytes = Uint8Array.from(audioData).buffer;
-        console.log("Converted audioBytes to Buffer:", audioBytes);
-        // Delete below
+        const { audioData } = req.body;
 
-        // const audioBuffer = Buffer.from(audioBytes);
-        // fs.writeFileSync('received_audio.wav', audioBuffer, (err) => {
-        //     if (err) {
-        //         console.error('Error writing audio file:', err);
-        //     } else {
-        //         console.log('Audio file saved successfully as received_audio.wav');
-        //     }
-        // });
+        // Load credentials from individual environment variables
+        const credentials = {
+            client_email: process.env.GOOGLE_CLIENT_EMAIL,
+            private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),  // Replace escaped newlines
+            project_id: process.env.GOOGLE_PROJECT_ID,
+        };
 
+        const client = await google.auth.getClient({
+            credentials,
+            scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+        });
 
+        const speech = google.speech({ version: 'v1p1beta1', auth: client });
+
+        // Convert the received audio data (Array of bytes) to a buffer
+        const audioBuffer = Buffer.from(audioData);
+
+        // Create a request object
         const request = {
-            audio: {
-                content: Buffer.from(audioBytes).toString('base64'), // Encode the audio data
-            },
             config: {
                 encoding: 'LINEAR16',
-                // sampleRateHertz: 48000,
+                sampleRateHertz: 16000,
                 languageCode: 'en-US',
             },
+            audio: {
+                content: audioBuffer.toString('base64'),
+            },
         };
-        console.log("Sending request to Google Speech-to-Text:", request);
-        // Process the request with Google Speech-to-Text
 
-        const [response] = await client.recognize(request);
-        console.log("Google Cloud Speech-to-Text response:", response);
+        // Call the Google Speech-to-Text API
+        const [response] = await speech.speech.recognize({
+            requestBody: request,
+        });
 
-        if (response && response.results && response.results.length > 0) {
-            const transcription = response.results
-                .map(result => (result.alternatives && result.alternatives.length > 0)
-                    ? result.alternatives[0].transcript
-                    : '')
-                .join('\n');
-            console.log("Transcription received:", transcription);
-        } else {
-            console.log("No transcription found.");
-        }
-        console.log("Google Cloud Speech-to-Text response:", response);
-
-        const transcription = response.results
+        const transcript = response.results
             .map(result => result.alternatives[0].transcript)
             .join('\n');
 
-        console.log("Transcription received:", transcription);
-
-        return new Response(JSON.stringify({ transcript: transcription }), {
-            status: 200,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-
+        res.status(200).json({ transcript });
     } catch (error) {
         console.error('Error with Google Speech-to-Text:', error);
-        return new Response(JSON.stringify({ error: 'Failed to process speech' }), {
-            status: 500,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
+        res.status(500).json({ error: 'Error with Google Speech-to-Text' });
     }
 }
