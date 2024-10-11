@@ -35,111 +35,74 @@ const Page = () => {
 
     const startSpeechRecognition = async () => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    
-        if (SpeechRecognition) {
-            // Browser supports Web Speech API (for desktop browsers)
-            const recognition = new SpeechRecognition();
-            recognition.lang = 'en-US';
-            recognition.interimResults = false;
-            recognition.continuous = false;
-    
-            recognition.onresult = (event) => {
-                const spokenText = event.results[0][0].transcript;
-                setUserInput(spokenText);
-            };
-    
-            recognition.onerror = (event) => {
-                console.error('Error occurred in recognition:', event.error);
-            };
-    
-            recognition.onend = () => {
-                setIsListening(false);
-            };
-    
-            recognition.start();
-        } else {
-            // No SpeechRecognition support (for mobile browsers)
-            console.log("Using Google Cloud Speech-to-Text for mobile");
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            const mediaRecorder = new MediaRecorder(stream);
-            let chunks = [];
-    
-            mediaRecorder.ondataavailable = (event) => {
-                chunks.push(event.data);
-            };
-    
-            mediaRecorder.onstop = async () => {
-                const audioBlob = new Blob(chunks, { type: 'audio/wav' });
-                const audioData = await audioBlob.arrayBuffer(); // Convert to binary data
-    
-                // Send audio data to the backend
-                const response = await fetch('/api/speech-to-text', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ audioData: Array.from(new Uint8Array(audioData)) }),
-                });
-    
-                const { transcript } = await response.json();
-                setUserInput(transcript);
-            };
-    
-            mediaRecorder.start();
-    
-            setTimeout(() => {
-                mediaRecorder.stop();
-            }, 5000); // Record for 5 seconds (adjust as needed)
-        }
+
+        // if (SpeechRecognition) {
+        //     const recognition = new SpeechRecognition();
+        //     recognition.lang = 'en-US';
+        //     recognition.interimResults = false;
+        //     recognition.continuous = false;
+
+        //     recognition.onresult = (event) => {
+        //         let spokenText = event.results[0][0].transcript;
+
+        //         // Filter out only individual letters (A-Z) and ignore any other input like spaces, numbers, etc.
+        //         let recognizedLetters = spokenText.toUpperCase().split('').filter(char => /^[A-Z]$/.test(char));
+
+        //         // Join letters without any spaces
+        //         let newInput = recognizedLetters.join('');
+
+        //         // Set the filtered input back to the user input state
+        //         setUserInput(newInput);
+        //     };
+
+        //     recognition.onerror = (event) => {
+        //         console.error('Error occurred in recognition:', event.error);
+        //     };
+
+        //     recognition.onend = () => {
+        //         setIsListening(false);
+        //     };
+
+        //     recognition.start();
+        // } else {
+        // Fallback for mobile or unsupported browsers
+        console.log("Using Google Cloud Speech-to-Text for mobile");
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const mediaRecorder = new MediaRecorder(stream);
+        let chunks = [];
+
+        mediaRecorder.ondataavailable = (event) => {
+            chunks.push(event.data);
+        };
+
+        mediaRecorder.onstop = async () => {
+            const audioBlob = new Blob(chunks, { type: 'audio/wav' });
+            const audioData = await audioBlob.arrayBuffer(); // Convert to binary data
+
+            // Send audio data to the backend
+            const response = await fetch('/api/speech-to-text', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ audioData: Array.from(new Uint8Array(audioData)) }),
+            });
+
+            const { transcript } = await response.json();
+
+            // Filter and handle letters as we did for desktop SpeechRecognition
+            let recognizedLetters = (transcript || "").toUpperCase().split('').filter(char => /^[A-Z]$/.test(char));
+            let newInput = recognizedLetters.join('');
+            setUserInput(newInput);
+        };
+
+        mediaRecorder.start();
+
+        setTimeout(() => {
+            mediaRecorder.stop();
+        }, 5000); // Record for 5 seconds (adjust as needed)
+        // }
     };
-    
-    // const startSpeechRecognition = () => {
-    //     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-    //     if (!SpeechRecognition) {
-    //         alert('Speech recognition is not supported by your browser.');
-    //         return;
-    //     }
-
-    //     const recognition = new window.webkitSpeechRecognition();
-    //     recognition.lang = 'en-US'; // Set the language
-    //     recognition.interimResults = false; // Get only final results
-    //     recognition.continuous = false; // Stop recognition after result
-
-    //     recognition.onstart = () => {
-    //         console.log('Voice recognition started');
-    //     };
-
-    //     recognition.onresult = (event) => {
-    //         const spokenText = event.results[0][0].transcript;
-    //         const recognizedLetters = spokenText.trim().toUpperCase().split(" ");
-
-    //         // Filter and process only individual letters
-    //         let newInput = '';
-    //         recognizedLetters.forEach((letter) => {
-    //             if (/^[A-Z]$/.test(letter)) {
-    //                 newInput += letter; // Build new input with valid letters
-    //             } else {
-    //                 console.log("Ignored non-letter input:", letter);
-    //             }
-    //         });
-
-    //         // Replace the current input with the recognized letters
-    //         setUserInput(newInput);
-    //     };
-
-    //     recognition.onerror = (event) => {
-    //         console.error('Error occurred in recognition:', event.error);
-    //     };
-
-    //     recognition.onend = () => {
-    //         console.log('Voice recognition ended');
-    //         setIsListening(false); // Stop listening after recognition ends
-    //     };
-
-    //     recognition.start(); // Start speech recognition
-    // };
-
 
     useEffect(() => {
         const handleVoicesChanged = () => {
