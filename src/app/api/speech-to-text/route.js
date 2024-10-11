@@ -32,7 +32,7 @@
 //     }
 // }
 
-import { google } from 'googleapis';
+// import { google } from 'googleapis';
 import { SpeechClient } from '@google-cloud/speech';
 
 // const serviceAccount = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON);
@@ -63,9 +63,19 @@ export async function POST(req) {
 
     // await authClient.authorize();
 
-    const client = new SpeechClient();
+    // const client = new SpeechClient();
 
     try {
+        const serviceAccount = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS);
+
+        const client = new SpeechClient({
+            credentials: {
+                client_email: serviceAccount.client_email,
+                private_key: serviceAccount.private_key,
+            },
+            projectId: serviceAccount.project_id,
+        });
+
         const { audioData } = await req.json();
         console.log("Received audioData:", audioData);
         const audioBytes = Uint8Array.from(audioData).buffer;
