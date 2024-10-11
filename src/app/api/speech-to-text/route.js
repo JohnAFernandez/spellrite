@@ -77,11 +77,12 @@ export async function POST(req) {
 
 
         const client = new SpeechClient({
-            credentials: {
-                client_email: serviceAccount.client_email,
-                private_key: serviceAccount.private_key
-            },
-            projectId: serviceAccount.project_id,
+            credentials: serviceAccount
+            // credentials: {
+            //     client_email: serviceAccount.client_email,
+            //     private_key: serviceAccount.private_key
+            // },
+            // projectId: serviceAccount.project_id,
         });
 
         // const client = new SpeechClient();
