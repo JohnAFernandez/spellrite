@@ -49,6 +49,8 @@ import { SpeechClient } from '@google-cloud/speech';
 //     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
 // });
 
+
+
 export async function POST(req) {
     if (req.method !== 'POST') {
         return new Response(JSON.stringify({ message: 'Only POST requests are allowed' }), {
