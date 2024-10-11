@@ -43,3 +43,5 @@ To-do:
 For the google api that is failing because of the env var in vercel:
 * it has been converted to base 64 and then converted back to a regular string in my api. Make sure that the base64 version is right (gpt did it, do it another way)
 * Error is saying that client_email is not there. Maybe start by converting the gpt-created base64 string back to a regular one and see what's up
+
+https://stackoverflow.com/questions/74299271/linking-google-credentials-to-vercel
