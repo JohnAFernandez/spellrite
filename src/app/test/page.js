@@ -23,6 +23,35 @@ const Page = () => {
     const [isListening, setIsListening] = useState(false);
     const inputRef = useRef(null);
 
+
+    const getOS = () => {
+        const userAgent = window.navigator.userAgent;
+        const platform = window.navigator.platform;
+        const macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'];
+        const windowsPlatforms = ['Win32', 'Win64', 'Windows', 'WinCE'];
+        const iosPlatforms = ['iPhone', 'iPad', 'iPod'];
+        let os = null;
+
+        if (macosPlatforms.includes(platform)) {
+            os = 'Mac OS';
+        } else if (iosPlatforms.includes(platform)) {
+            os = 'iOS';
+        } else if (windowsPlatforms.includes(platform)) {
+            os = 'Windows';
+        } else if (/Android/.test(userAgent)) {
+            os = 'Android';
+        } else if (!os && /Linux/.test(platform)) {
+            os = 'Linux';
+        }
+
+        return os;
+    };
+
+    // Usage
+    const os = getOS();
+    console.log(`Operating System: ${os}`);
+
+
     useEffect(() => {
         if (isListening) {
             console.log("LISTENING!!!");
@@ -155,7 +184,8 @@ const Page = () => {
             };
 
             recognition.start();
-        } else {
+        }
+        if (os === 'iOS') {
             // Fallback for mobile or unsupported browsers
             console.log("Using Google Cloud Speech-to-Text for mobile");
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
