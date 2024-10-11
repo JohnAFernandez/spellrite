@@ -65,9 +65,9 @@ export async function POST(req) {
     // const client = new SpeechClient();
 
     try {
-        // const serviceAccount = new Buffer.from(process.env.GOOGLE_APPLICATION_CREDENTIALS, 'base64').toString('ascii');
-        const serviceAccount = JSON.parse(Buffer.from(process.env.GOOGLE_APPLICATION_CREDENTIALS, 'base64').toString('ascii'));;
-
+        const serviceAccount = new Buffer.from(process.env.GOOGLE_APPLICATION_CREDENTIALS, 'base64').toString('ascii');
+        serviceAccount = JSON.pasrse(serviceAccount);
+        
         const client = new SpeechClient({
             credentials: {
                 client_email: serviceAccount.client_email,
