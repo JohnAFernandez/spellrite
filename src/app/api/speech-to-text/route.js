@@ -67,11 +67,10 @@ export async function POST(req) {
 
     try {
         const serviceAccount = new Buffer(process.env.GOOGLE_APPLICATION_CREDENTIALS, 'base64').toString();
-        console.log('Decoded JSON:', decodedJson);
-        
+
         const client = new SpeechClient({
             credentials: serviceAccount,
-            projectId: serviceAccount.project_id,
+
         });
 
         const { audioData } = await req.json();
