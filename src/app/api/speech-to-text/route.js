@@ -33,6 +33,9 @@
 // }
 
 import { SpeechClient } from '@google-cloud/speech';
+const fs = require('fs');
+
+
 
 // Use a named export for the POST method
 export async function POST(req) {
@@ -49,8 +52,19 @@ export async function POST(req) {
 
     try {
         const { audioData } = await req.json();
-
+        console.log("Received audioData:", audioData);
         const audioBytes = Uint8Array.from(audioData).buffer;
+        console.log("Converted audioBytes to Buffer:", audioBytes);
+        // Delete below
+        const audioBuffer = Buffer.from(audioBytes);
+        fs.writeFileSync('received_audio.wav', audioBuffer, (err) => {
+            if (err) {
+                console.error('Error writing audio file:', err);
+            } else {
+                console.log('Audio file saved successfully as received_audio.wav');
+            }
+        });
+
 
         const request = {
             audio: {
@@ -58,16 +72,33 @@ export async function POST(req) {
             },
             config: {
                 encoding: 'LINEAR16',
-                // sampleRateHertz: 16000,
+                // sampleRateHertz: 48000,
                 languageCode: 'en-US',
             },
         };
-
+        console.log("Sending request to Google Speech-to-Text:", request);
         // Process the request with Google Speech-to-Text
+
         const [response] = await client.recognize(request);
+        console.log("Google Cloud Speech-to-Text response:", response);
+
+        if (response && response.results && response.results.length > 0) {
+            const transcription = response.results
+                .map(result => (result.alternatives && result.alternatives.length > 0)
+                    ? result.alternatives[0].transcript
+                    : '')
+                .join('\n');
+            console.log("Transcription received:", transcription);
+        } else {
+            console.log("No transcription found.");
+        }
+        console.log("Google Cloud Speech-to-Text response:", response);
+
         const transcription = response.results
             .map(result => result.alternatives[0].transcript)
             .join('\n');
+
+        console.log("Transcription received:", transcription);
 
         return new Response(JSON.stringify({ transcript: transcription }), {
             status: 200,
