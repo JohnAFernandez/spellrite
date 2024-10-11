@@ -126,6 +126,7 @@ export async function POST(req) {
                 'Content-Type': 'application/json',
             },
         });
+        
 
     } catch (error) {
         console.error('Error with Google Speech-to-Text:', error);
