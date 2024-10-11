@@ -66,12 +66,9 @@ export async function POST(req) {
     // const client = new SpeechClient();
 
     try {
-        const base64ServiceAccount = process.env.GOOGLE_APPLICATION_CREDENTIALS_BASE64;
-        const decodedJson = Buffer.from(base64ServiceAccount, 'base64').toString('utf-8');
-        console.log('Decoded JSON:', decodedJson); // Check what is actually getting decoded
-
-        const serviceAccount = JSON.parse(decodedJson);
-
+        const serviceAccount = new Buffer(process.env.GOOGLE_APPLICATION_CREDENTIALS, 'base64').toString();
+        console.log('Decoded JSON:', decodedJson);
+        
         const client = new SpeechClient({
             credentials: serviceAccount,
             projectId: serviceAccount.project_id,
