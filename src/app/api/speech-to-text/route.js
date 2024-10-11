@@ -56,14 +56,15 @@ export async function POST(req) {
         const audioBytes = Uint8Array.from(audioData).buffer;
         console.log("Converted audioBytes to Buffer:", audioBytes);
         // Delete below
-        const audioBuffer = Buffer.from(audioBytes);
-        fs.writeFileSync('received_audio.wav', audioBuffer, (err) => {
-            if (err) {
-                console.error('Error writing audio file:', err);
-            } else {
-                console.log('Audio file saved successfully as received_audio.wav');
-            }
-        });
+        
+        // const audioBuffer = Buffer.from(audioBytes);
+        // fs.writeFileSync('received_audio.wav', audioBuffer, (err) => {
+        //     if (err) {
+        //         console.error('Error writing audio file:', err);
+        //     } else {
+        //         console.log('Audio file saved successfully as received_audio.wav');
+        //     }
+        // });
 
 
         const request = {
