@@ -59,7 +59,7 @@ export async function POST(req) {
         });
     }
 
-    await authClient.authorize();
+    // await authClient.authorize();
 
     const client = new SpeechClient();
 
