@@ -94,6 +94,7 @@ export async function POST(req) {
         const audioBytes = Uint8Array.from(audioData).buffer;
         console.log("Converted audioBytes to Buffer:", audioBytes);
 
+        
         const request = {
             audio: {
                 content: Buffer.from(audioBytes).toString('base64'), // Encode the audio data
