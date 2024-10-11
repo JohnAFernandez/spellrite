@@ -56,7 +56,7 @@ export async function POST(req) {
         const audioBytes = Uint8Array.from(audioData).buffer;
         console.log("Converted audioBytes to Buffer:", audioBytes);
         // Delete below
-        
+
         // const audioBuffer = Buffer.from(audioBytes);
         // fs.writeFileSync('received_audio.wav', audioBuffer, (err) => {
         //     if (err) {
@@ -118,3 +118,5 @@ export async function POST(req) {
         });
     }
 }
+
+
