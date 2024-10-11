@@ -113,92 +113,27 @@ const Page = () => {
     const startSpeechRecognition = async () => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-        // if (SpeechRecognition) {
-        //     const recognition = new SpeechRecognition();
-        //     recognition.lang
-        //         = 'en-US';
-        //     recognition.interimResults = false;
-        //     recognition.continuous = false;
+        if (SpeechRecognition) {
+            const recognition = new SpeechRecognition();
+            recognition.lang
+                = 'en-US';
+            recognition.interimResults = false;
+            recognition.continuous = false;
 
-        //     recognition.onresult = (event) => {
-        //         // Get the spoken text from the event and trim any extra spaces
-        //         const spokenText = event.results[0][0].transcript.trim().toUpperCase();
-        //         console.log(`Spoken Text: "${spokenText}"`);
+            recognition.onresult = (event) => {
+                // Get the spoken text from the event and trim any extra spaces
+                const spokenText = event.results[0][0].transcript.trim().toUpperCase();
+                console.log(`Spoken Text: "${spokenText}"`);
 
-        //         // Split the spoken text by spaces (it might be more than one letter if the system misinterprets)
-        //         const recognizedLetters = spokenText.split(/\s+/); // Split by any whitespace
-        //         console.log("Recognized Letters:", recognizedLetters);
+                // Split the spoken text by spaces (it might be more than one letter if the system misinterprets)
+                const recognizedLetters = spokenText.split(/\s+/); // Split by any whitespace
+                console.log("Recognized Letters:", recognizedLetters);
 
-        //         let newInput = ''; // Initialize empty string for valid letters
+                let newInput = ''; // Initialize empty string for valid letters
 
-        //         // Iterate over the recognized input and filter out anything that isn't a single letter
-        //         recognizedLetters.forEach((letter) => {
-        //             // Ensure only single letters (A-Z) are accepted
-        //             if (/^[A-Z]$/.test(letter)) {
-        //                 newInput += letter; // Append valid letters to the new input
-        //             } else {
-        //                 console.log("Ignored non-letter or multi-letter input:", letter);
-        //             }
-        //         });
-
-        //         if (newInput) {
-        //             // If we recognized valid letters, append them to the current input
-        //             setUserInput(prevInput => prevInput + newInput);
-        //             console.log(`New User Input: ${newInput}`);
-        //         } else {
-        //             console.log("No valid letters recognized.");
-        //         }
-        //     };
-
-        //     recognition.onend = () => {
-        //         setIsListening(false);
-        //     };
-
-        //     recognition.start();
-        // } else {
-        // Fallback for mobile or unsupported browsers
-        console.log("Using Google Cloud Speech-to-Text for mobile");
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        const mediaRecorder = new MediaRecorder(stream);
-        let chunks = [];
-
-        mediaRecorder.ondataavailable = (event) => {
-            chunks.push(event.data);
-        };
-
-        mediaRecorder.onstop = async () => {
-            const audioBlob = new Blob(chunks, { type: 'audio/wav' });
-            const resampledBlob = await convertTo16kHz(audioBlob);
-            console.log("Audio Blob:", audioBlob);
-            const audioData = await resampledBlob.arrayBuffer(); // Convert to binary data
-
-            // Send audio data to the backend
-            const response = await fetch('/api/speech-to-text', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ audioData: Array.from(new Uint8Array(audioData)) }),
-            });
-
-            try {
-                const { transcript, error } = await response.json();
-                if (error) {
-                    console.error('Error from backend:', error);
-                    return; // Handle the error appropriately
-                }
-
-                console.log(`received from backend::: ${transcript}`);
-
-                // Process the transcript and split into separate "words" (in case multiple words are spoken)
-                const recognizedLetters = (transcript || "").toUpperCase().split(/\s+/); // Split by spaces or multiple spaces
-                console.log("Recognized Letters from backend:", recognizedLetters);
-
-                let newInput = ''; // Initialize an empty string to build valid input
-
-                // Iterate through the recognized letters and filter for valid single letters only
+                // Iterate over the recognized input and filter out anything that isn't a single letter
                 recognizedLetters.forEach((letter) => {
-                    // Accept only single alphabet letters (A-Z)
+                    // Ensure only single letters (A-Z) are accepted
                     if (/^[A-Z]$/.test(letter)) {
                         newInput += letter; // Append valid letters to the new input
                     } else {
@@ -207,24 +142,89 @@ const Page = () => {
                 });
 
                 if (newInput) {
-                    // If valid letters were recognized, append them to the existing user input
+                    // If we recognized valid letters, append them to the current input
                     setUserInput(prevInput => prevInput + newInput);
                     console.log(`New User Input: ${newInput}`);
                 } else {
-                    console.log("No valid letters recognized from the backend.");
+                    console.log("No valid letters recognized.");
                 }
-            } catch (error) {
-                console.error('Error fetching transcript:', error);
-            }
-        };
+            };
 
-        mediaRecorder.start();
+            recognition.onend = () => {
+                setIsListening(false);
+            };
 
-        setTimeout(() => {
-            mediaRecorder.stop();
-            setIsListening(false);
-        }, 5000); // Record for 5 seconds (adjust as needed)
-        // }
+            recognition.start();
+        } else {
+            // Fallback for mobile or unsupported browsers
+            console.log("Using Google Cloud Speech-to-Text for mobile");
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const mediaRecorder = new MediaRecorder(stream);
+            let chunks = [];
+
+            mediaRecorder.ondataavailable = (event) => {
+                chunks.push(event.data);
+            };
+
+            mediaRecorder.onstop = async () => {
+                const audioBlob = new Blob(chunks, { type: 'audio/wav' });
+                const resampledBlob = await convertTo16kHz(audioBlob);
+                console.log("Audio Blob:", audioBlob);
+                const audioData = await resampledBlob.arrayBuffer(); // Convert to binary data
+
+                // Send audio data to the backend
+                const response = await fetch('/api/speech-to-text', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ audioData: Array.from(new Uint8Array(audioData)) }),
+                });
+
+                try {
+                    const { transcript, error } = await response.json();
+                    if (error) {
+                        console.error('Error from backend:', error);
+                        return; // Handle the error appropriately
+                    }
+
+                    console.log(`received from backend::: ${transcript}`);
+
+                    // Process the transcript and split into separate "words" (in case multiple words are spoken)
+                    const recognizedLetters = (transcript || "").toUpperCase().split(/\s+/); // Split by spaces or multiple spaces
+                    console.log("Recognized Letters from backend:", recognizedLetters);
+
+                    let newInput = ''; // Initialize an empty string to build valid input
+
+                    // Iterate through the recognized letters and filter for valid single letters only
+                    recognizedLetters.forEach((letter) => {
+                        // Accept only single alphabet letters (A-Z)
+                        if (/^[A-Z]$/.test(letter)) {
+                            newInput += letter; // Append valid letters to the new input
+                        } else {
+                            console.log("Ignored non-letter or multi-letter input:", letter);
+                        }
+                    });
+
+                    if (newInput) {
+                        // If valid letters were recognized, append them to the existing user input
+                        setUserInput(prevInput => prevInput + newInput);
+                        console.log(`New User Input: ${newInput}`);
+                    } else {
+                        console.log("No valid letters recognized from the backend.");
+                    }
+                } catch (error) {
+                    console.error('Error fetching transcript:', error);
+                }
+            };
+
+            mediaRecorder.start();
+
+            setTimeout(() => {
+                mediaRecorder.stop();
+                setIsListening(false);
+            }, 5000); // Record for 5 seconds (adjust as needed)
+        }
     };
 
     useEffect(() => {
@@ -396,7 +396,7 @@ const Page = () => {
                             </button>
                         )}
                     </div>
-                    <button className={styles.micButton} onClick={handleMicrophoneClick}>
+                    <button className={styles.micButton} onClick={handleMicrophoneClick} style={{ backgroundColor: isListening ? "#00DFA2" : "#FF0060" }}>
                         <FontAwesomeIcon icon={faMicrophone} style={{ color: "#ffffff" }} />
                     </button>
                 </div>
