@@ -146,49 +146,7 @@ const Page = () => {
     const startSpeechRecognition = async () => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-        if (SpeechRecognition) {
-            const recognition = new SpeechRecognition();
-            recognition.lang
-                = 'en-US';
-            recognition.interimResults = false;
-            recognition.continuous = false;
 
-            recognition.onresult = (event) => {
-                // Get the spoken text from the event and trim any extra spaces
-                const spokenText = event.results[0][0].transcript.trim().toUpperCase();
-                console.log(`Spoken Text: "${spokenText}"`);
-
-                // Split the spoken text by spaces (it might be more than one letter if the system misinterprets)
-                const recognizedLetters = spokenText.split(/\s+/); // Split by any whitespace
-                console.log("Recognized Letters:", recognizedLetters);
-
-                let newInput = ''; // Initialize empty string for valid letters
-
-                // Iterate over the recognized input and filter out anything that isn't a single letter
-                recognizedLetters.forEach((letter) => {
-                    // Ensure only single letters (A-Z) are accepted
-                    if (/^[A-Z]$/.test(letter)) {
-                        newInput += letter; // Append valid letters to the new input
-                    } else {
-                        console.log("Ignored non-letter or multi-letter input:", letter);
-                    }
-                });
-
-                if (newInput) {
-                    // If we recognized valid letters, append them to the current input
-                    setUserInput(prevInput => prevInput + newInput);
-                    console.log(`New User Input: ${newInput}`);
-                } else {
-                    console.log("No valid letters recognized.");
-                }
-            };
-
-            recognition.onend = () => {
-                setIsListening(false);
-            };
-
-            recognition.start();
-        }
         if (os === 'iOS') {
             // Fallback for mobile or unsupported browsers
             console.log("Using Google Cloud Speech-to-Text for mobile");
@@ -259,6 +217,50 @@ const Page = () => {
                 setIsListening(false);
             }, 5000); // Record for 5 seconds (adjust as needed)
         }
+        else if (SpeechRecognition) {
+            const recognition = new SpeechRecognition();
+            recognition.lang
+                = 'en-US';
+            recognition.interimResults = false;
+            recognition.continuous = false;
+
+            recognition.onresult = (event) => {
+                // Get the spoken text from the event and trim any extra spaces
+                const spokenText = event.results[0][0].transcript.trim().toUpperCase();
+                console.log(`Spoken Text: "${spokenText}"`);
+
+                // Split the spoken text by spaces (it might be more than one letter if the system misinterprets)
+                const recognizedLetters = spokenText.split(/\s+/); // Split by any whitespace
+                console.log("Recognized Letters:", recognizedLetters);
+
+                let newInput = ''; // Initialize empty string for valid letters
+
+                // Iterate over the recognized input and filter out anything that isn't a single letter
+                recognizedLetters.forEach((letter) => {
+                    // Ensure only single letters (A-Z) are accepted
+                    if (/^[A-Z]$/.test(letter)) {
+                        newInput += letter; // Append valid letters to the new input
+                    } else {
+                        console.log("Ignored non-letter or multi-letter input:", letter);
+                    }
+                });
+
+                if (newInput) {
+                    // If we recognized valid letters, append them to the current input
+                    setUserInput(prevInput => prevInput + newInput);
+                    console.log(`New User Input: ${newInput}`);
+                } else {
+                    console.log("No valid letters recognized.");
+                }
+            };
+
+            recognition.onend = () => {
+                setIsListening(false);
+            };
+
+            recognition.start();
+        }
+
     };
 
     useEffect(() => {
