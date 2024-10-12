@@ -94,6 +94,7 @@ export async function POST(req) {
             projectId: projectId,
         });
 
+        
         // const client = new SpeechClient();
 
         const { audioData } = await req.json();
