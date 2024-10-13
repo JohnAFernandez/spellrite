@@ -29,25 +29,27 @@ export default function Home() {
                     <li className={styles.directionItem}>
                         You can either type your answer or tap the microphone to spell verbally.
                     </li>
-                    <li className={styles.directionItem}>
+                    {/* <li className={styles.directionItem}>
                         If you are using a phone, you may need to give your browser speech recognition permissions to use the speech option.
-                    </li>
+                    </li> */}
 
                 </ul>
-                <ul style={{
+                <ul 
+                className={styles.testButtonList}
+                style={{
                     listStyleType: "none",
                     paddingLeft: 0
                 }}>
                     <li>
                         <Link href="/test">
-                            <button onClick={() => handleTestSelection('T-4')} className={styles.testButton} >
+                            <button onClick={() => handleTestSelection('Spelling Test T-4')} className={styles.testButton} >
                                 List T-4
                             </button>
                         </Link>
                     </li>
                     <li>
                         <Link href="/test">
-                            <button onClick={() => handleTestSelection('T-5')} className={styles.testButton} >
+                            <button onClick={() => handleTestSelection('Spelling Test T-5')} className={styles.testButton} >
                                 List T-5
                             </button>
                         </Link>

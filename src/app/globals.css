@@ -1,8 +1,4 @@
-/* // oceanBlue: #0079FF
-// lightGreen: #00DFA2
-// canary: #F6FA70
-// magenta: #FF0060
-// https://colorhunt.co/palettes/kids */
+
 
 :root {
   --background: #f9f9f9;
@@ -34,6 +30,9 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 * {

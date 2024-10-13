@@ -1,20 +1,23 @@
 "use client"
 import { useEffect, useState, useRef } from 'react';
-import { currentList } from '../../../lists/T4.js';
-import { convertTo16kHz } from '../../utils/audioConversion.js'
-import { useRouter } from 'next/navigation';
-import styles from '../page.module.scss';
+import { useGlobalState } from '@/GlobalStateContext.js';
+import { T4, T5 } from '@/lists/T4';
+
+import { convertTo16kHz } from '../utils/audioConversion.js'
+
+import styles from './page.module.scss';
 import Link from 'next/link.js';
 import Image from 'next/image.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faVolumeUp, faBullhorn, faMegaphone, faMicrophone, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
-import { getOS } from '../../utils/getOS.js'
+import { faVolumeUp, faBullhorn, faMegaphone, faMicrophone, faTimesCircle, faArrowRight, faAnglesRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { getOS } from '../utils/getOS.js'
+import { Tooltip } from 'react-tooltip'
 
 const Page = () => {
-    const router = useRouter();
+
     const [currentList, setCurrentList] = useState([]);
     const [isReady, setIsReady] = useState(false);
-
+    const { test } = useGlobalState();
     const [nextMondayDate, setNextMondayDate] = useState('');
     const [wordCount, setWordCount] = useState(0);
     const [currentWord, setCurrentWord] = useState('');
@@ -33,21 +36,13 @@ const Page = () => {
     console.log(`Operating System: ${os}`);
 
     useEffect(() => {
-        const { list } = router.query;  // Grab the dynamic parameter 'list'
-
-        if (list) {
-            if (list === 'currentList') {
-                setCurrentList(currentList);  // Load your list based on the parameter
-            } else if (list === 't-5') {
-                setCurrentList(test2);  // Handle other cases like 't-5'
-            }
-            setIsReady(true);
+        if (test === 'Spelling Test T-4') {
+            setCurrentList(T4);
+            console.log(`yup, we set the list to ${currentList}`);
+        } else if (test === 'Spelling Test T-5') {
+            setCurrentList(T5);
         }
-    }, [router.query]);
-
-    if (!isReady) {
-        return <div>Loading...</div>;
-    }
+    }, [test]);
 
     useEffect(() => {
         if (isListening) {
@@ -272,10 +267,10 @@ const Page = () => {
 
     const startTest = () => {
         setIsTesting(true);
-        setCurrentWord(list[0]);
+        setCurrentWord(currentList[0]);
         setWordCount(0);
         setScore(0);
-        playWord(list[0]);
+        playWord(currentList[0]);
         if (inputRef.current) {
             inputRef.current.focus();
         }
@@ -284,7 +279,7 @@ const Page = () => {
     const handleNextWord = () => {
         if (!isTesting) return;
         if (userInput.trim().length < 1) return;
-        if (wordCount >= list.length - 1) {
+        if (wordCount >= currentList.length - 1) {
             setIsTesting(false);
             setMainBtnMessage('Test Again')
         }
@@ -298,10 +293,10 @@ const Page = () => {
             console.log("userword: ", userInput, "currentWord: ", currentWord);
         }
 
-        if (wordCount < list.length) {
-            setCurrentWord(list[wordCount + 1]);
+        if (wordCount < currentList.length) {
+            setCurrentWord(currentList[wordCount + 1]);
             setWordCount((prevCount) => prevCount + 1);
-            playWord(list[wordCount + 1]);
+            playWord(currentList[wordCount + 1]);
             setUserInput('');
             console.log(`Correct! New Score: ${score}`);
         } else {
@@ -352,61 +347,120 @@ const Page = () => {
         playWord(currentWord);
     }
 
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            console.log('Enter key was pressed. Value:', userInput);
+            handleNextWord();
+        }
+    };
+
     return (
-        <main className={styles.main}>
-            <h1 className={styles.title}><Link href='/'>5th Grade Spelling</Link></h1>
-            {/* {!isTesting && <h3>
+        <div className={styles.page}>
+            <main className={styles.main}>
+                <div className={styles.backDiv} >
+                    <FontAwesomeIcon icon={faChevronLeft} />
+                    <h4 className={styles.backBtn}>
+                        <Link href='/'>
+                            Back to Lists
+                        </Link>
+                    </h4>
+
+                </div>
+                {/* {!isTesting && <h3>
                 Test for the week of {nextMondayDate}
             </h3>} */}
-            <div>Score: <span>{score}/{wordCount}</span></div>
-            {!isTesting && <button className={styles.btn} onClick={
-                startTest
-            }>{mainBtnMessage}</button>}
-            {isTesting && <div className={styles.test}>
+                <div>Score: <span>{score}/{wordCount}</span></div>
+                {!isTesting && <button className={styles.btn} onClick={
+                    startTest
+                }>{mainBtnMessage}</button>}
+                {isTesting && <div className={styles.test}>
 
 
 
-                {isTesting && <div className={styles.inputContainer}>
+                    {isTesting && <div className={styles.inputContainer}>
 
-                    <h4 className={styles.subtitle}>Type the word here:</h4>
-                    <div>
-                        <input
-                            type="text"
-                            className={styles.input}
-                            value={userInput}
-                            onChange={handleInputChange}
-                            placeholder=""
-                            ref={inputRef}
-                            spellCheck="false"
-                        />
-                        {userInput && (
-                            <button className={styles.clearButton} onClick={handleClearInput}>
-                                <FontAwesomeIcon icon={faTimesCircle} />
-                            </button>
-                        )}
+                        <h4 className={styles.subtitle}>Type word:</h4>
+                        <div>
+                            <input
+                                type="text"
+                                className={styles.input}
+                                value={userInput}
+                                onChange={handleInputChange}
+                                onKeyPress={handleKeyPress}
+                                placeholder=""
+                                ref={inputRef}
+                                spellCheck="false"
+                            />
+                            {userInput && (
+                                <button className={styles.clearButton} onClick={handleClearInput}>
+                                    <FontAwesomeIcon icon={faTimesCircle} />
+                                </button>
+                            )}
+                        </div>
+                        <button
+                            className={styles.micButton}
+                            onClick={handleMicrophoneClick}
+                            style={{ backgroundColor: isListening ? "#f2f597" : "#492e87" }}>
+                            <FontAwesomeIcon icon={faMicrophone} style={{ color: isListening ? "#0A1D56" : "#ffffff" }} />
+                        </button>
                     </div>
-                    <button className={styles.micButton} onClick={handleMicrophoneClick} style={{ backgroundColor: isListening ? "#00DFA2" : "#FF0060" }}>
-                        <FontAwesomeIcon icon={faMicrophone} style={{ color: "#ffffff" }} />
-                    </button>
-                </div>
 
-                }
-                {isTesting && <div className={styles.buttons}>
-                    <button onClick={repeatWord} className={styles.repeatBtn}>
-                        <h4>Repeat Word</h4>
-                        <FontAwesomeIcon icon={faVolumeUp} style={styles.icon} />
-                    </button>
-                    <button className={styles.nextBtn} onClick={handleNextWord}>
-                        Next
-                    </button>
-                </div>}
-                {/* <ol>
+                    }
+                    {isTesting && <div className={styles.buttons}>
+                        <button 
+                        onClick={repeatWord} 
+                        className={styles.repeatBtn}
+                        data-tooltip-id="repeat-tip"
+                        data-tooltip-content="Repeat Word"
+                        data-tooltip-place="bottom" 
+                        >
+                            <FontAwesomeIcon
+                                className={styles.repeatIcon}
+                                icon={faVolumeUp} style={styles.icon}
+                            />
+                            {/* <h4>Repeat</h4> */}
+                            
+                        </button>
+                        <Tooltip
+                            id="repeat-tip"
+                            />
+                        <button
+                            className={styles.nextBtn}
+                            onClick={handleNextWord} data-tooltip-id="next-tip"
+                            data-tooltip-content="Next Word"
+                            data-tooltip-place="bottom" 
+                        >
+                            <FontAwesomeIcon
+                                className={styles.nextIcon}
+                                icon={faAnglesRight}
+                            />
+                            {/* <h4>Next</h4> */}
+                        </button>
+                        <Tooltip 
+                        id="next-tip"
+                        
+                        />
+                    </div>}
+                    {/* <ol>
                     {oct8.map((word, index) => {
                         return (<li key={index} className='word'>{word}</li>)
                     })}
                 </ol> */}
-            </div>}
-        </main>
+                </div>}
+            </main>
+            <footer className={styles.footer}>
+                <div className={styles.imageDiv} >
+                    <Image
+                        aria-hidden
+                        src="/assets/lacey_no_bg.png"
+                        alt="Globe icon"
+                        width={55}
+                        height={55}
+                    /></div>
+                <div>If the mic button isn&apos;t working, you might need to give your browser permission for speech-to-text!</div>
+                {/* </a> */}
+            </footer>
+        </div>
     )
 }
 

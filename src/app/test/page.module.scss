@@ -1,23 +1,24 @@
-// Theme colors:
-// offwhite: #e5e3e1
-// lightGrey: #989491
-// brown: #5f4b2a
-// forestGreen: #3c401a
-// black: #171006
-//https://bejamas.io/blog/minimalist-color-palette-and-typography-in-web-design
-
-// don't use above, use this:
-// oceanBlue: #0079FF
-// lightGreen: #00DFA2
-// canary: #F6FA70
-// magenta: #FF0060
-// https://colorhunt.co/palettes/kids
-
-.main {
+.page {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
 
+.main {
+    background: var(--primaryDark);
+    width: 500px;
+    height: 700px;
+    max-width: 100vw;
+    max-height: 100vh;
+    padding: 2rem;
+    margin: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--lightText);
+    border-radius: 2rem;
+    display: flex;
+  
 }
 
 .test {
@@ -31,27 +32,40 @@
     align-items: center;
     justify-content: start;
     padding-block: 1rem;
-    background-color: #0079FF;
+    // background-color: #0079FF;
     border-radius: 4%;
-    color: #171006;
+    color: var(--lightText);
 }
 
 .inputContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
+    
+
 }
 
-.title {
-    padding-block: 1rem;
+.backDiv{
+    display: flex;
+    align-self: start;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    cursor: pointer;
 }
+
+
+// .input {
+//     flex: 1;
+    
+//     /* To make room for the button */
+// }
 
 .input {
     height: 3rem;
     width: 14rem;
     font-size: 2rem;
     caret-color: #F6FA70;
-    padding-inline: 1rem;
+    padding: 1rem 40px 1rem  1rem;
 
     outline: none;
     border: 2px solid #5f4b2a;
@@ -90,48 +104,51 @@
 }
 
 .nextBtn {
-    color: white;
-    background-color: #00DFA2;
+    color: var(--lightText);
+    background-color: var(--primaryAccent);
     border-color: transparent;
     border-radius: 1rem;
     width: 8rem;
     height: 3rem;
     margin-block: 1rem;
+    font-size: 10px;
+    cursor: pointer;
+    .nextIcon {
+        font-size: 30px;
+    }
 }
 
 
 
 .repeatBtn {
-    color: white;
-    background-color: #00DFA2;
+    color: var(--lightText);
+    background-color: var(--primaryAccent);
     border-color: transparent;
     border-radius: 1rem;
-    width: 8rem;
+    width: 4rem;
     height: 3rem;
     margin-block: 0rem;
+    font-size: 10px;
+  
+    cursor: pointer;
+    .repeatIcon{
+        font-size: 25px;
+    }
 }
 
 .subtitle {
     margin-block: 1rem;
+
 }
 
-.inputContainer {
-    display: flex;
-    align-items: center;
-}
 
-.input {
-    flex: 1;
-    padding-right: 40px;
-    /* To make room for the button */
-}
 
 .micButton {
     // position: relative;
     // right: 40px;
     // background: none;
-    height: 5rem;
-    width: 5rem;
+    height: 6rem;
+    width: 6rem;
     padding: 0.5rem 0.5rem;
     margin: 1rem;
     border-radius: 50%;
@@ -142,11 +159,39 @@
 }
 
 .clearButton {
+    color: var(--lightText);
     position: relative;
-
     transform: translateX(-33px);
     background: none;
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
+}
+
+.footer {
+    margin-bottom: 1rem;
+    padding-inline: 1rem;
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    gap: 2rem;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    .imgDiv{
+        border: 1px solid var(--primaryDark);
+        // padding: 0.5rem;
+    }
+    img{
+        transform: scaleX(-1);
+        border-radius: 50%;
+        
+    }
+}
+
+@media (max-width: 575.98px) {
+    .main {
+        margin: 0px;
+        border-radius: 0;
+    }
 }
