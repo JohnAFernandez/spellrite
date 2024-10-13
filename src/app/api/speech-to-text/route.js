@@ -131,7 +131,7 @@
 
 
 
-import { Deepgram } from '@deepgram/sdk';
+import { createClient } from '@deepgram/sdk';
 
 export async function POST(req) {
     if (req.method !== 'POST') {
@@ -144,9 +144,7 @@ export async function POST(req) {
     }
 
     try {
-        // Use your Deepgram API key (make sure it's stored in your environment variables)
-        const deepgramApiKey = process.env.DEEPGRAM_API_KEY;
-        const deepgram = new Deepgram(deepgramApiKey);
+        const deepgram = createClient(process.env.DEEPGRAM_API_KEY);
 
         const { audioData } = await req.json();
         console.log("Received audioData:", audioData);
@@ -155,14 +153,21 @@ export async function POST(req) {
         const audioBuffer = Buffer.from(audioData);
 
         // Send audio data to Deepgram for transcription using v3 format
-        const response = await deepgram.transcription.preRecorded(
-            { buffer: audioBuffer, mimetype: 'audio/wav' }, // Adjust mimetype based on your audio format
-            { punctuate: true, model: 'general', language: 'en' } // Customize options as needed
+        const { result, error } = await deepgram.transcription.prerecorded(
+            audioBuffer,
+            {
+                model: 'nova-2',    // You can use the model suited to your use case
+                smart_format: true,  // Enables smart punctuation and formatting
+                punctuate: true,     // Optional, but adds punctuation to the transcript
+                language: 'en'       // Set the language to English
+            }
         );
 
-        console.log("Deepgram response:", response);
+        if (error) {
+            throw error;
+        }
 
-        const transcription = response.results.channels[0].alternatives[0].transcript;
+        const transcription = result.channels[0].alternatives[0].transcript;
 
         return new Response(JSON.stringify({ transcript: transcription }), {
             status: 200,
