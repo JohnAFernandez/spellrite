@@ -131,7 +131,6 @@
 
 
 
-
 import { Deepgram } from '@deepgram/sdk';
 
 export async function POST(req) {
@@ -155,10 +154,10 @@ export async function POST(req) {
         // Convert audioData to Buffer for Deepgram
         const audioBuffer = Buffer.from(audioData);
 
-        // Send audio data to Deepgram for transcription
+        // Send audio data to Deepgram for transcription using v3 format
         const response = await deepgram.transcription.preRecorded(
             { buffer: audioBuffer, mimetype: 'audio/wav' }, // Adjust mimetype based on your audio format
-            { punctuate: true, language: 'en' } // Customize options if needed
+            { punctuate: true, model: 'general', language: 'en' } // Customize options as needed
         );
 
         console.log("Deepgram response:", response);
