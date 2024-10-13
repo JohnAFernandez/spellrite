@@ -79,21 +79,21 @@ export async function POST(req) {
 
 
 
-        // const client_email = process.env.GOOGLE_CLIENT_EMAIL;
-        // const private_key_escaped = process.env.GOOGLE_PRIVATE_KEY; // Handle escaped newlines
-        // const private_key = private_key_escaped.replace(/\\n/g, '\n');
-        // const projectId = process.env.GOOGLE_PROJECT_ID;
+        const client_email = process.env.GOOGLE_APPLICATION_CREDENTIALS.client_email;
+        const private_key_escaped = process.env.GOOGLE_APPLICATION_CREDENTIALS.private_key; // Handle escaped newlines
+        const private_key = private_key_escaped.replace(/\\n/g, '\n');
+        const projectId = process.env.GOOGLE_APPLICATION_CREDENTIALS.projectId;
 
 
         const client = new SpeechClient(
-            //     {
-            //     // credentials: serviceAccount
-            //     credentials: {
-            //         client_email: client_email,
-            //         private_key: private_key
-            //     },
-            //     projectId: projectId,
-            // }
+                {
+                // credentials: serviceAccount
+                credentials: {
+                    client_email: client_email,
+                    private_key: private_key
+                },
+                projectId: projectId,
+            }
         );
 
 
