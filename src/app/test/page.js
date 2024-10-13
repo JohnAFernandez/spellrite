@@ -386,7 +386,7 @@ const Page = () => {
 export default Page;
 
 
-export const convertTo16kHz = async (audioBlob) => {
+const convertTo16kHz = async (audioBlob) => {
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
     // Convert the Blob into an AudioBuffer
