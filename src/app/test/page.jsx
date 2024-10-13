@@ -35,14 +35,15 @@ const Page = () => {
     const os = getOS();
     console.log(`Operating System: ${os}`);
 
+
     useEffect(() => {
-        if (test === 'Spelling Test T-4') {
-            setCurrentList(T4);
-            console.log(`yup, we set the list to ${currentList}`);
-        } else if (test === 'Spelling Test T-5') {
-            setCurrentList(T5);
+        if (test === 'T-4') {
+          setCurrentList((prevList) => T4); // Use functional update
+        } else if (test === 'T-5') {
+          setCurrentList((prevList) => T5); // Use functional update
         }
-    }, [test]);
+      }, [test]); 
+
 
     useEffect(() => {
         if (isListening) {
