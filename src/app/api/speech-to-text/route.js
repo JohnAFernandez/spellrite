@@ -76,25 +76,27 @@ export async function POST(req) {
         // const serviceAccount = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON;
         // const serviceAccountJson = Buffer.from(req.env.GOOGLE_APPLICATION_CREDENTIALS, 'base64').toString('utf-8');
         // const serviceAccount = JSON.parse(serviceAccountJson);
-   
 
 
-        const client_email = process.env.GOOGLE_CLIENT_EMAIL;
-        const private_key_escaped = process.env.GOOGLE_PRIVATE_KEY; // Handle escaped newlines
-        const private_key = private_key_escaped.replace(/\\n/g, '\n');
-        const projectId = process.env.GOOGLE_PROJECT_ID;
+
+        // const client_email = process.env.GOOGLE_CLIENT_EMAIL;
+        // const private_key_escaped = process.env.GOOGLE_PRIVATE_KEY; // Handle escaped newlines
+        // const private_key = private_key_escaped.replace(/\\n/g, '\n');
+        // const projectId = process.env.GOOGLE_PROJECT_ID;
 
 
-        const client = new SpeechClient({
-            // credentials: serviceAccount
-            credentials: {
-                client_email: client_email,
-                private_key: private_key
-            },
-            projectId: projectId,
-        });
+        const client = new SpeechClient(
+            //     {
+            //     // credentials: serviceAccount
+            //     credentials: {
+            //         client_email: client_email,
+            //         private_key: private_key
+            //     },
+            //     projectId: projectId,
+            // }
+        );
 
-        
+
         // const client = new SpeechClient();
 
         const { audioData } = await req.json();
