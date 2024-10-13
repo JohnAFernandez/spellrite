@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState, useRef } from 'react';
 import { currentList } from '../../lists/currentList.js';
-// import { convertTo16kHz } from '../utils/audioConversion.js'
+import { convertTo16kHz } from '../utils/audioConversion.js'
 
 import styles from './page.module.scss';
 import Link from 'next/link.js';
@@ -73,9 +73,9 @@ const Page = () => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
 
-        if (os === 'iOS') {
-            // Fallback for mobile or unsupported browsers
-            console.log("Using Google Cloud Speech-to-Text for mobile");
+
+
+        const listenWithDeepGram = async () => {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             const mediaRecorder = new MediaRecorder(stream);
             let chunks = [];
@@ -138,10 +138,43 @@ const Page = () => {
 
             mediaRecorder.start();
 
-            setTimeout(() => {
-                mediaRecorder.stop();
-                setIsListening(false);
-            }, 5000); // Record for 5 seconds (adjust as needed)
+            // Listen for silence and stop recording when silence is detected for a while
+            const audioContext = new AudioContext();
+            const audioSource = audioContext.createMediaStreamSource(stream);
+            const analyser = audioContext.createAnalyser();
+            audioSource.connect(analyser);
+            analyser.fftSize = 512; // Smaller size for more granularity
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+
+            let silenceStart = performance.now();
+            let silenceThreshold = 2000;
+            const checkForSilence = () => {
+                analyser.getByteFrequencyData(dataArray);
+                const sum = dataArray.reduce((a, b) => a + b, 0);
+                const average = sum / bufferLength;
+
+                if (average < 10) { // You can adjust this threshold for "silence"
+                    if (performance.now() - silenceStart > silenceThreshold) {
+                        mediaRecorder.stop();
+                        setIsListening(false);
+                        stream.getTracks().forEach(track => track.stop());
+                        console.log('Stopped recording due to silence');
+                    }
+                } else {
+                    silenceStart = performance.now(); // Reset silence timer if sound is detected
+                }
+
+                if (mediaRecorder.state !== 'inactive') {
+                    requestAnimationFrame(checkForSilence);
+                }
+            };
+
+            checkForSilence();
+
+        }
+        if (os === 'iOS') {
+            listenWithDeepGram()
         }
         else if (SpeechRecognition) {
             const recognition = new SpeechRecognition();
@@ -185,6 +218,8 @@ const Page = () => {
             };
 
             recognition.start();
+        } else {
+            listenWithDeepGram();
         }
 
     };
@@ -386,83 +421,3 @@ const Page = () => {
 export default Page;
 
 
-const convertTo16kHz = async (audioBlob) => {
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
-    // Convert the Blob into an AudioBuffer
-    const arrayBuffer = await audioBlob.arrayBuffer();
-    const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-
-    // Create an OfflineAudioContext to perform the resampling
-    const offlineContext = new OfflineAudioContext(
-        audioBuffer.numberOfChannels,
-        audioBuffer.duration * 16000, // Set the length of the buffer
-        16000 // The target sample rate (16 kHz)
-    );
-
-    // Create a buffer source for the audio data
-    const bufferSource = offlineContext.createBufferSource();
-    bufferSource.buffer = audioBuffer;
-
-    // Connect the source to the offline context's destination and start the buffer
-    bufferSource.connect(offlineContext.destination);
-    bufferSource.start(0);
-
-    // Start rendering the audio
-    const renderedBuffer = await offlineContext.startRendering();
-
-    // Convert the resampled buffer to a Blob (WAV format)
-    const resampledBlob = audioBufferToWav(renderedBuffer);
-
-    return resampledBlob;
-};
-
-// Helper function to convert AudioBuffer to WAV format
-const audioBufferToWav = (buffer) => {
-    const numOfChan = buffer.numberOfChannels,
-        length = buffer.length * numOfChan * 2 + 44,
-        bufferView = new DataView(new ArrayBuffer(length)),
-        channels = [],
-        sampleRate = buffer.sampleRate,
-        bytesPerSample = 2;
-    let offset = 0;
-
-    const setUint16 = (data) => {
-        bufferView.setUint16(offset, data, true);
-        offset += 2;
-    };
-
-    const setUint32 = (data) => {
-        bufferView.setUint32(offset, data, true);
-        offset += 4;
-    };
-
-    // Write WAV header
-    setUint32(0x46464952); // "RIFF"
-    setUint32(length - 8); // file length - 8
-    setUint32(0x45564157); // "WAVE"
-
-    setUint32(0x20746d66); // "fmt " chunk
-    setUint32(16); // length = 16
-    setUint16(1); // PCM (uncompressed)
-    setUint16(numOfChan);
-    setUint32(sampleRate);
-    setUint32(sampleRate * bytesPerSample * numOfChan);
-    setUint16(bytesPerSample * numOfChan);
-    setUint16(8 * bytesPerSample);
-
-    setUint32(0x61746164); // "data" - chunk
-    setUint32(length - offset - 4); // data length
-
-    // Write interleaved data
-    for (let i = 0; i < buffer.length; i++) {
-        for (let channel = 0; channel < numOfChan; channel++) {
-            let sample = buffer.getChannelData(channel)[i] * 0x7fff; // Convert to PCM
-            if (sample < -32768) sample = -32768;
-            if (sample > 32767) sample = 32767;
-            bufferView.setInt16(offset, sample, true);
-            offset += 2;
-        }
-    }
-    return new Blob([bufferView], { type: 'audio/wav' });
-};
