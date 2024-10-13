@@ -1,6 +1,17 @@
+/* // oceanBlue: #0079FF
+// lightGreen: #00DFA2
+// canary: #F6FA70
+// magenta: #FF0060
+// https://colorhunt.co/palettes/kids */
+
 :root {
-  --background: #171717;
-  --foreground: #ffffff;
+  --background: #f9f9f9;
+  --foreground: black;
+  --primaryDark: #0A1D56;
+  --secondaryDark: #492e87;
+  --primaryAccent: #37b5b6;
+  --secondaryAccent: #f2f597;
+  --lightText: #f9f9f9;
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -19,7 +30,7 @@ body {
 
 body {
   color: var(--foreground);
-  background: var(--background);
+  background: var(--lightText);
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

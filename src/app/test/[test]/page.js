@@ -1,22 +1,20 @@
 "use client"
 import { useEffect, useState, useRef } from 'react';
-import { useGlobalState } from '@/GlobalStateContext.js';
-import { T4 } from '@/lists/T4';
-import { T5 } from '@/lists/T5.js'
-import { convertTo16kHz } from '../utils/audioConversion.js'
-
-import styles from './page.module.scss';
+import { currentList } from '../../../lists/T4.js';
+import { convertTo16kHz } from '../../utils/audioConversion.js'
+import { useRouter } from 'next/navigation';
+import styles from '../page.module.scss';
 import Link from 'next/link.js';
 import Image from 'next/image.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeUp, faBullhorn, faMegaphone, faMicrophone, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
-import { getOS } from '../utils/getOS.js'
+import { getOS } from '../../utils/getOS.js'
 
 const Page = () => {
-
+    const router = useRouter();
     const [currentList, setCurrentList] = useState([]);
     const [isReady, setIsReady] = useState(false);
-    const { test } = useGlobalState();
+
     const [nextMondayDate, setNextMondayDate] = useState('');
     const [wordCount, setWordCount] = useState(0);
     const [currentWord, setCurrentWord] = useState('');
@@ -35,13 +33,21 @@ const Page = () => {
     console.log(`Operating System: ${os}`);
 
     useEffect(() => {
-        if (test === 'T-4') {
-            setCurrentList(T4);
-            console.log(`yup, we set the list to ${currentList}`);
-        } else if (test === 'T-5') {
-            setCurrentList(T5); 
+        const { list } = router.query;  // Grab the dynamic parameter 'list'
+
+        if (list) {
+            if (list === 'currentList') {
+                setCurrentList(currentList);  // Load your list based on the parameter
+            } else if (list === 't-5') {
+                setCurrentList(test2);  // Handle other cases like 't-5'
+            }
+            setIsReady(true);
         }
-    }, [test]);
+    }, [router.query]);
+
+    if (!isReady) {
+        return <div>Loading...</div>;
+    }
 
     useEffect(() => {
         if (isListening) {
@@ -266,10 +272,10 @@ const Page = () => {
 
     const startTest = () => {
         setIsTesting(true);
-        setCurrentWord(currentList[0]);
+        setCurrentWord(list[0]);
         setWordCount(0);
         setScore(0);
-        playWord(currentList[0]);
+        playWord(list[0]);
         if (inputRef.current) {
             inputRef.current.focus();
         }
@@ -293,9 +299,9 @@ const Page = () => {
         }
 
         if (wordCount < list.length) {
-            setCurrentWord(currentList[wordCount + 1]);
+            setCurrentWord(list[wordCount + 1]);
             setWordCount((prevCount) => prevCount + 1);
-            playWord(currentList[wordCount + 1]);
+            playWord(list[wordCount + 1]);
             setUserInput('');
             console.log(`Correct! New Score: ${score}`);
         } else {
