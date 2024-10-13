@@ -83,6 +83,10 @@ export async function POST(req) {
         const private_key_escaped = process.env.GOOGLE_APPLICATION_CREDENTIALS.private_key; // Handle escaped newlines
         const private_key = private_key_escaped.replace(/\\n/g, '\n');
         const projectId = process.env.GOOGLE_APPLICATION_CREDENTIALS.projectId;
+          // Ensure all credentials are available
+          if (!client_email || !private_key || !projectId) {
+            throw new Error('Missing required environment variables.');
+        }
 
 
         const client = new SpeechClient(
