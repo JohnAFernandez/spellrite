@@ -79,7 +79,7 @@ export async function POST(req) {
 
 
 
-        const client_email = process.env.GOOGLE_APPLICATION_CREDENTIALS.client_email;
+        const client_email = process.env.CLIENT_EMAIL;
         const private_key_escaped = process.env.GOOGLE_APPLICATION_CREDENTIALS.private_key; // Handle escaped newlines
         const private_key = private_key_escaped.replace(/\\n/g, '\n');
         const projectId = process.env.GOOGLE_APPLICATION_CREDENTIALS.projectId;
