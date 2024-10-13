@@ -145,20 +145,20 @@ export async function POST(req) {
     }
 
     try {
-        // Use your Deepgram API key (add it to your environment variables)
+        // Use your Deepgram API key (make sure it's stored in your environment variables)
         const deepgramApiKey = process.env.DEEPGRAM_API_KEY;
         const deepgram = new Deepgram(deepgramApiKey);
 
         const { audioData } = await req.json();
         console.log("Received audioData:", audioData);
-        
+
         // Convert audioData to Buffer for Deepgram
-        const audioBuffer = Uint8Array.from(audioData).buffer;
+        const audioBuffer = Buffer.from(audioData);
 
         // Send audio data to Deepgram for transcription
         const response = await deepgram.transcription.preRecorded(
-            { buffer: audioBuffer, mimetype: 'audio/wav' }, // assuming the audio is WAV
-            { punctuate: true, language: 'en' } // you can customize these options
+            { buffer: audioBuffer, mimetype: 'audio/wav' }, // Adjust mimetype based on your audio format
+            { punctuate: true, language: 'en' } // Customize options if needed
         );
 
         console.log("Deepgram response:", response);
