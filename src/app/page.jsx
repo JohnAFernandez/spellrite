@@ -34,8 +34,8 @@ export default function Home() {
                                 className={styles.directionsImg1}
                             />
                             <h5>
-                                Click on this week&apos;s spelling list to practice.
-
+                                {/* Click on this week&apos;s spelling list to practice. */}
+                                Click on the list you want to practice.
                             </h5>
                         </div>
                     </li>
