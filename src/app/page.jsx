@@ -25,33 +25,33 @@ export default function Home() {
                     }}>
                     <li className={styles.directionItem}>
                         <div className={styles.directionsRow}>
-                            <Image
+                            {/* <Image
                                 aria-hidden
                                 src="/assets/lacey_no_bg.png"
                                 alt="Globe icon"
                                 width={45}
                                 height={45}
                                 className={styles.directionsImg1}
-                            />
-                            <h5>
+                            /> */}
+                            <h3>
                                 {/* Click on this week&apos;s spelling list to practice. */}
-                                Click on the list you want to practice.
-                            </h5>
+                                ✓ Click on the list you want to practice.
+                            </h3>
                         </div>
                     </li>
                     <li className={styles.directionItem}>
                         <div className={styles.directionsRow}>
-                            <h5>
-                                You can either type or speak your answer.
-                            </h5>
-                            <Image
+                            <h3>
+                            ✓ You can either type or speak your answer.
+                            </h3>
+                            {/* <Image
                                 aria-hidden
                                 src="/assets/lacey_no_bg.png"
                                 alt="Globe icon"
                                 width={45}
                                 height={45}
                                 className={styles.directionsImg2}
-                            />
+                            /> */}
                         </div>
 
                     </li>
