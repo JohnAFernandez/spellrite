@@ -10,7 +10,7 @@ const SpellingResults = ({ userWords, targetWords }) => {
                 <ul className={styles.resultsList}>
                     {userWords.map((word, index) => {
                         const isCorrect = userWords[index].trim().toLowerCase() === targetWords[index].trim().toLowerCase();
-                        return <li
+                        return <li key={index}
                             className={isCorrect ? styles.correct : styles.incorrect}
                         >
                             {isCorrect ? `✓ ${word}` : <div><span className={styles.incorrect}>✕ {word}</span> <span className={styles.correct}>({targetWords[index]})</span></div>}
