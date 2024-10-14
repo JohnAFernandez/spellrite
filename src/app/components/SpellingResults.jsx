@@ -13,7 +13,7 @@ const SpellingResults = ({ userWords, targetWords }) => {
                         return <li key={index}
                             className={isCorrect ? styles.correct : styles.incorrect}
                         >
-                            {isCorrect ? `✓ ${word}` : <div><span className={styles.incorrect}>✕ {word}</span> <span className={styles.correct}>({targetWords[index]})</span></div>}
+                            {isCorrect ? `✓ ${word}` : <div><span className={styles.incorrect}>✕ {word}</span> <span className={styles.correct}>(correct: {targetWords[index]})</span></div>}
                         </li>
                     })}
                 </ul>

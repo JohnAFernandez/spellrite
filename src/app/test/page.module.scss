@@ -95,7 +95,7 @@
 .btn {
     margin-top: 1rem;
     color: white;
-    background-color: #00DFA2;
+    background-color: var(--primaryAccent);
     border-color: transparent;
     border-radius: 1rem;
     width: 11rem;
@@ -197,6 +197,11 @@
 
 .score {
     font-size: 22px;
+}
+
+.persmissionsDiv {
+    font-size: 18px;
+    margin-bottom: 4rem;
 }
 
 @media (max-width: 575.98px) {

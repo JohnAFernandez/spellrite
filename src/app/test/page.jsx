@@ -380,6 +380,7 @@ const Page = () => {
             </h3>} */}
                 {showScore && <div className={styles.score}>Score: <span>{score}/{wordCount}</span></div>}
                 {showScore && <SpellingResults userWords={userWordList} targetWords={currentList} />}
+                {!isTesting && userWordList.length < 1 && <div className={styles.persmissionsDiv}>If you wish to use the microphone button, you may need to go into your device settings and allow <em>speech-to-text</em> and <em>microphone</em>permissions for your browser.</div>}
                 {!isTesting && <button className={styles.btn} onClick={
                     startTest
                 }>{mainBtnMessage}</button>}

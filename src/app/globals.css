@@ -8,6 +8,8 @@
   --primaryAccent: #37b5b6;
   --secondaryAccent: #f2f597;
   --lightText: #f9f9f9;
+  --dangerColor: #FF4C4C;
+  --correctColor: #4CAF50;
 }
 
 /* @media (prefers-color-scheme: dark) {
