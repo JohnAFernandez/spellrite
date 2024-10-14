@@ -1,8 +1,8 @@
 "use client"
-import styles from "./page.module.css";
+import styles from "./page.module.scss";
 import Link from "next/link";
 import Image from "next/image";
-import { useGlobalState } from '../GlobalStateContext'; 
+import { useGlobalState } from '../GlobalStateContext';
 
 export default function Home() {
     const { setTest } = useGlobalState();
@@ -14,7 +14,7 @@ export default function Home() {
     return (
         <div className={styles.page}>
             <main className={styles.main}>
-                <h1>Spelling Practice</h1>
+                <h1>5th Grade Spelling</h1>
 
                 {/* <h3>Directions:</h3> */}
                 <ul
@@ -24,22 +24,48 @@ export default function Home() {
                         paddingLeft: 0
                     }}>
                     <li className={styles.directionItem}>
-                        Click on this week&apos;s spelling list to practice.
+                        <div className={styles.directionsRow}>
+                            <Image
+                                aria-hidden
+                                src="/assets/lacey_no_bg.png"
+                                alt="Globe icon"
+                                width={45}
+                                height={45}
+                                className={styles.directionsImg1}
+                            />
+                            <h5>
+                                Click on this week&apos;s spelling list to practice.
+
+                            </h5>
+                        </div>
                     </li>
                     <li className={styles.directionItem}>
-                        You can either type your answer or tap the microphone to spell verbally.
+                        <div className={styles.directionsRow}>
+                            <h5>
+                                You can either type or speak your answer.
+                            </h5>
+                            <Image
+                                aria-hidden
+                                src="/assets/lacey_no_bg.png"
+                                alt="Globe icon"
+                                width={45}
+                                height={45}
+                                className={styles.directionsImg2}
+                            />
+                        </div>
+
                     </li>
                     {/* <li className={styles.directionItem}>
                         If you are using a phone, you may need to give your browser speech recognition permissions to use the speech option.
                     </li> */}
 
                 </ul>
-                <ul 
-                className={styles.testButtonList}
-                style={{
-                    listStyleType: "none",
-                    paddingLeft: 0
-                }}>
+                <ul
+                    className={styles.testButtonList}
+                    style={{
+                        listStyleType: "none",
+                        paddingLeft: 0
+                    }}>
                     <li>
                         <Link href="/test">
                             <button onClick={() => handleTestSelection('Spelling Test T-4')} className={styles.testButton} >
@@ -87,12 +113,11 @@ export default function Home() {
                         alt="Globe icon"
                         width={55}
                         height={55}
-                    /></div>
+                    />
+                </div>
                 <div>Mrs. Hvattum&apos;s 5th Grade →</div>
                 {/* </a> */}
             </footer>
         </div>
     );
 }
-
-

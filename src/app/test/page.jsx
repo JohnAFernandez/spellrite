@@ -455,7 +455,7 @@ const Page = () => {
                 </ol> */}
                 </div>}
             </main>
-            <footer className={styles.footer}>
+            {!isTesting && !showScore && <footer className={styles.footer}>
                 <div className={styles.imageDiv} >
                     <Image
                         aria-hidden
@@ -466,7 +466,7 @@ const Page = () => {
                     /></div>
                 <div>If the mic button isn&apos;t working, you might need to give your browser permission for speech-to-text!</div>
                 {/* </a> */}
-            </footer>
+            </footer>}
         </div>
     )
 }
