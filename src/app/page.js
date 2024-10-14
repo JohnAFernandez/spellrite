@@ -54,6 +54,27 @@ export default function Home() {
                             </button>
                         </Link>
                     </li>
+                    <li>
+                        <Link href="/test">
+                            <button onClick={() => handleTestSelection('Spelling Test U-1')} className={styles.testButton} >
+                                List U-1
+                            </button>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href="/test">
+                            <button onClick={() => handleTestSelection('Spelling Test U-2')} className={styles.testButton} >
+                                List U-2
+                            </button>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href="/test">
+                            <button onClick={() => handleTestSelection('Spelling Test U-3')} className={styles.testButton} >
+                                List U-3
+                            </button>
+                        </Link>
+                    </li>
                 </ul>
                 {/* <button style={{ backgroundColor: "#00DFA2", outline: "none", border: "none", padding: "0.5rem 1rem", borderRadius: "0.5rem", fontSize: "2rem" }}><Link href='/test'>GO</Link></button> */}
 

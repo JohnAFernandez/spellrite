@@ -2,7 +2,10 @@
 import { useEffect, useState, useRef } from 'react';
 import { useGlobalState } from '@/GlobalStateContext.js';
 import { T4 } from '@/lists/T4.js';
-import { T5 } from '@/lists/T5.js'
+import { T5 } from '@/lists/T5.js';
+import { U1 } from '@/lists/U1.js';
+import { U2 } from '@/lists/U2.js';
+import { U3 } from '@/lists/U3.js';
 
 import { convertTo16kHz } from '../utils/audioConversion.js'
 
@@ -41,11 +44,17 @@ const Page = () => {
 
     useEffect(() => {
         if (test === 'Spelling Test T-4') {
-            setCurrentList(T4); // Use functional update
+            setCurrentList(T4);
             console.log('list T4!!!!');
         } else if (test === 'Spelling Test T-5') {
-            setCurrentList(T5); // Use functional update
+            setCurrentList(T5);
             console.log('list T5!!!!');
+        } else if (test === 'Spelling Test U-1') {
+            setCurrentList(U1);
+        } else if (test === 'Spelling Test U-2') {
+            setCurrentList(U2);
+        } else if (test === 'Spelling Test U-3') {
+            setCurrentList(U3);
         }
     }, [test]);
 
@@ -64,9 +73,6 @@ const Page = () => {
 
     const startSpeechRecognition = async () => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-
-
 
         const listenWithDeepGram = async () => {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -167,7 +173,7 @@ const Page = () => {
 
         }
         if (os === 'iOS') {
-            listenWithDeepGram()
+            listenWithDeepGram();
         }
         else if (SpeechRecognition) {
             const recognition = new SpeechRecognition();
