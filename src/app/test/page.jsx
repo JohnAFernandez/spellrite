@@ -1,7 +1,8 @@
 "use client"
 import { useEffect, useState, useRef } from 'react';
 import { useGlobalState } from '@/GlobalStateContext.js';
-import { T4, T5 } from '@/lists/T4';
+import { T4 } from '@/lists/T4.js';
+import { T5 } from '@/lists/T5.js'
 
 import { convertTo16kHz } from '../utils/audioConversion.js'
 
@@ -12,13 +13,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeUp, faBullhorn, faMegaphone, faMicrophone, faTimesCircle, faArrowRight, faAnglesRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { getOS } from '../utils/getOS.js'
 import { Tooltip } from 'react-tooltip'
+import SpellingResults from '../components/SpellingResults.jsx';
 
 const Page = () => {
 
     const [currentList, setCurrentList] = useState([]);
     const [isReady, setIsReady] = useState(false);
     const { test } = useGlobalState();
-    const [nextMondayDate, setNextMondayDate] = useState('');
+    // const [nextMondayDate, setNextMondayDate] = useState('');
     const [wordCount, setWordCount] = useState(0);
     const [currentWord, setCurrentWord] = useState('');
     const [isTesting, setIsTesting] = useState(false);
@@ -29,6 +31,7 @@ const Page = () => {
     const [voices, setVoices] = useState([]);
     const [selectedVoice, setSelectedVoice] = useState(null)
     const [isListening, setIsListening] = useState(false);
+    const [showScore, setShowScore] = useState(false);
     const inputRef = useRef(null);
 
     // Usage
@@ -37,12 +40,14 @@ const Page = () => {
 
 
     useEffect(() => {
-        if (test === 'T-4') {
-          setCurrentList((prevList) => T4); // Use functional update
-        } else if (test === 'T-5') {
-          setCurrentList((prevList) => T5); // Use functional update
+        if (test === 'Spelling Test T-4') {
+            setCurrentList(T4); // Use functional update
+            console.log('list T4!!!!');
+        } else if (test === 'Spelling Test T-5') {
+            setCurrentList(T5); // Use functional update
+            console.log('list T5!!!!');
         }
-      }, [test]); 
+    }, [test]);
 
 
     useEffect(() => {
@@ -240,31 +245,31 @@ const Page = () => {
     }, [isTesting]);
 
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        function getNextMonday() {
-            const today = new Date();
+    //     function getNextMonday() {
+    //         const today = new Date();
 
-            const dayOfWeek = today.getDay();
+    //         const dayOfWeek = today.getDay();
 
-            let daysUntilNextMonday;
-            if (dayOfWeek === 0) {
+    //         let daysUntilNextMonday;
+    //         if (dayOfWeek === 0) {
 
-                daysUntilNextMonday = 1;
-            } else if (dayOfWeek === 1 || dayOfWeek === 2) {
+    //             daysUntilNextMonday = 1;
+    //         } else if (dayOfWeek === 1 || dayOfWeek === 2) {
 
-                daysUntilNextMonday = 0;
-            } else {
+    //             daysUntilNextMonday = 0;
+    //         } else {
 
-                daysUntilNextMonday = (8 - dayOfWeek) % 7;
-            }
+    //             daysUntilNextMonday = (8 - dayOfWeek) % 7;
+    //         }
 
-            const nextMonday = new Date(today);
-            nextMonday.setDate(today.getDate() + daysUntilNextMonday);
-            return nextMonday.toDateString();
-        }
-        setNextMondayDate(getNextMonday());
-    }, []);
+    //         const nextMonday = new Date(today);
+    //         nextMonday.setDate(today.getDate() + daysUntilNextMonday);
+    //         return nextMonday.toDateString();
+    //     }
+    //     setNextMondayDate(getNextMonday());
+    // }, []);
 
     const startTest = () => {
         setIsTesting(true);
@@ -272,6 +277,8 @@ const Page = () => {
         setWordCount(0);
         setScore(0);
         playWord(currentList[0]);
+        setShowScore(false);
+        setUserWordList([]);
         if (inputRef.current) {
             inputRef.current.focus();
         }
@@ -282,12 +289,11 @@ const Page = () => {
         if (userInput.trim().length < 1) return;
         if (wordCount >= currentList.length - 1) {
             setIsTesting(false);
+            setShowScore(true);
             setMainBtnMessage('Test Again')
         }
 
         setUserWordList((prevList) => [...prevList, userInput]);
-        // console.table(userWordList);
-
         console.log("userword: ", userInput, "currentWord: ", currentWord);
         if (userInput.trim().toLowerCase() === currentWord.toLowerCase()) {
             setScore((prevScore) => prevScore + 1);
@@ -317,13 +323,6 @@ const Page = () => {
         setUserInput('');
     };
 
-    // const playWord = (word) => {
-    //     const speech = new SpeechSynthesisUtterance(word);
-    //     if (selectedVoice) {
-    //         speech.voice = selectedVoice;
-    //     }
-    //     window.speechSynthesis.speak(speech);
-    // };
     const playWord = (word) => {
         const speech = new SpeechSynthesisUtterance(word);
 
@@ -358,28 +357,28 @@ const Page = () => {
     return (
         <div className={styles.page}>
             <main className={styles.main}>
-                <div className={styles.backDiv} >
-                    <FontAwesomeIcon icon={faChevronLeft} />
-                    <h4 className={styles.backBtn}>
-                        <Link href='/'>
-                            Back to Lists
-                        </Link>
-                    </h4>
+                <div className={styles.header}>
+                    <div className={styles.backDiv} >
+                        <FontAwesomeIcon icon={faChevronLeft} />
+                        <h4 className={styles.backBtn}>
+                            <Link href='/'>
+                                Back to Lists
+                            </Link>
+                        </h4>
 
+                    </div>
+                    <h4>{test}</h4>
                 </div>
                 {/* {!isTesting && <h3>
                 Test for the week of {nextMondayDate}
             </h3>} */}
-                <div>Score: <span>{score}/{wordCount}</span></div>
+                {showScore && <div className={styles.score}>Score: <span>{score}/{wordCount}</span></div>}
+                {showScore && <SpellingResults userWords={userWordList} targetWords={currentList} />}
                 {!isTesting && <button className={styles.btn} onClick={
                     startTest
                 }>{mainBtnMessage}</button>}
                 {isTesting && <div className={styles.test}>
-
-
-
                     {isTesting && <div className={styles.inputContainer}>
-
                         <h4 className={styles.subtitle}>Type word:</h4>
                         <div>
                             <input
@@ -408,28 +407,28 @@ const Page = () => {
 
                     }
                     {isTesting && <div className={styles.buttons}>
-                        <button 
-                        onClick={repeatWord} 
-                        className={styles.repeatBtn}
-                        data-tooltip-id="repeat-tip"
-                        data-tooltip-content="Repeat Word"
-                        data-tooltip-place="bottom" 
+                        <button
+                            onClick={repeatWord}
+                            className={styles.repeatBtn}
+                            data-tooltip-id="repeat-tip"
+                            data-tooltip-content="Repeat Word"
+                            data-tooltip-place="bottom"
                         >
                             <FontAwesomeIcon
                                 className={styles.repeatIcon}
                                 icon={faVolumeUp} style={styles.icon}
                             />
                             {/* <h4>Repeat</h4> */}
-                            
+
                         </button>
                         <Tooltip
                             id="repeat-tip"
-                            />
+                        />
                         <button
                             className={styles.nextBtn}
                             onClick={handleNextWord} data-tooltip-id="next-tip"
                             data-tooltip-content="Next Word"
-                            data-tooltip-place="bottom" 
+                            data-tooltip-place="bottom"
                         >
                             <FontAwesomeIcon
                                 className={styles.nextIcon}
@@ -437,9 +436,9 @@ const Page = () => {
                             />
                             {/* <h4>Next</h4> */}
                         </button>
-                        <Tooltip 
-                        id="next-tip"
-                        
+                        <Tooltip
+                            id="next-tip"
+
                         />
                     </div>}
                     {/* <ol>

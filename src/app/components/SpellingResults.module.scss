@@ -1,0 +1,29 @@
+.resultsContainer {
+    width: 100%;
+    
+    .resultsListDiv {
+        // width: 100%;
+        margin-left: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+
+        .resultsList {
+            list-style-type: none;
+            font-size: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 0rem;
+            margin-top: 1rem;
+
+            .correct {
+                color: green;
+            }
+
+            .incorrect {
+                color: red;
+            }
+        }
+    }
+}
