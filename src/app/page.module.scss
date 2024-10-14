@@ -57,12 +57,16 @@ background-color: var(--primaryAccent);
 .footer {
     margin-top: auto;
     margin-bottom: 1rem;
+    padding-top: 1rem;
     display: flex;
-    align-items: end;
+    align-items: center;
     justify-content: center;
     gap: 2rem;
     bottom: 0;
-    width: 100%;
+    width: 100%; 
+    img{
+        border-radius: 50%;
+    }
 }
 @media (max-width: 575.98px) {
     .main {

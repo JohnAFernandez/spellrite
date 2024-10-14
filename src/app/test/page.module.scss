@@ -18,7 +18,7 @@
     color: var(--lightText);
     border-radius: 2rem;
     display: flex;
-  
+
 }
 
 .test {
@@ -42,7 +42,7 @@
     justify-content: space-between;
     width: 100%;
 
-    .backDiv{
+    .backDiv {
         display: flex;
         // align-self: start;
         gap: 0.75rem;
@@ -62,7 +62,7 @@
 
 // .input {
 //     flex: 1;
-    
+
 //     /* To make room for the button */
 // }
 
@@ -72,7 +72,7 @@
     font-size: 1.75rem;
     caret-color: var(--primaryAccent);
     caret-shape: underscore;
-    padding: 1rem 40px 1rem  1rem;
+    padding: 1rem 40px 1rem 1rem;
     outline: none;
     border: 2px solid var(--secondaryDark);
     /* Add a custom border */
@@ -119,6 +119,7 @@
     margin-block: 1rem;
     font-size: 10px;
     cursor: pointer;
+
     .nextIcon {
         font-size: 30px;
     }
@@ -135,9 +136,10 @@
     height: 3rem;
     margin-block: 0rem;
     font-size: 10px;
-  
+
     cursor: pointer;
-    .repeatIcon{
+
+    .repeatIcon {
         font-size: 25px;
     }
 }
@@ -178,20 +180,22 @@
     margin-bottom: 1rem;
     padding-inline: 1rem;
     display: flex;
-    align-items: start;
+    align-items: center;
     justify-content: center;
     gap: 2rem;
     position: absolute;
     bottom: 0;
     width: 100%;
-    .imgDiv{
+
+    .imgDiv {
         border: 1px solid var(--primaryDark);
         // padding: 0.5rem;
     }
-    img{
-        transform: scaleX(-1);
+
+    img {
+        // transform: scaleX(-1);
         border-radius: 50%;
-        
+
     }
 }
 

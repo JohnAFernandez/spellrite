@@ -455,7 +455,9 @@ const Page = () => {
                 </ol> */}
                 </div>}
             </main>
-            {!isTesting && !showScore && <footer className={styles.footer}>
+            {
+                !isTesting && !showScore &&
+                <footer className={styles.footer}>
                 <div className={styles.imageDiv} >
                     <Image
                         aria-hidden
@@ -463,10 +465,12 @@ const Page = () => {
                         alt="Globe icon"
                         width={55}
                         height={55}
-                    /></div>
-                <div>If the mic button isn&apos;t working, you might need to give your browser permission for speech-to-text!</div>
+                    />
+                </div>
+                <div>Mrs. Hvattum&apos;s 5th Grade →</div>
                 {/* </a> */}
-            </footer>}
+            </footer>
+            }
         </div>
     )
 }
