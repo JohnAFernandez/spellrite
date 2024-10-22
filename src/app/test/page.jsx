@@ -410,6 +410,10 @@ const Page = () => {
                                 placeholder=""
                                 ref={inputRef}
                                 spellCheck="false"
+                                autoComplete="off" 
+                     
+                                autoCorrect="off" 
+                                autoCapitalize="off" 
                             />
                             {userInput && (
                                 <button className={styles.clearButton} onClick={handleClearInput}>
