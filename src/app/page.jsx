@@ -42,7 +42,7 @@ export default function Home() {
                     <li className={styles.directionItem}>
                         <div className={styles.directionsRow}>
                             <h3>
-                            ✓ You can either type or speak your answer.
+                                ✓ You can either type or speak your answer.
                             </h3>
                             {/* <Image
                                 aria-hidden
@@ -68,12 +68,47 @@ export default function Home() {
                     }}>
                     <li>
                         <Link href="/test">
-                            <button onClick={() => handleTestSelection('Spelling Test T-4')} className={styles.testButton} >
-                                List T-4
+                            <button onClick={() => handleTestSelection('States Test 1-10')} className={styles.testButton} >
+                                States 1-10
                             </button>
                         </Link>
                     </li>
                     <li>
+                        <Link href="/test">
+                            <button onClick={() => handleTestSelection('States Test 11-20')} className={styles.testButton} >
+                                States 11-20
+                            </button>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href="/test">
+                            <button onClick={() => handleTestSelection('States Test 21-30')} className={styles.testButton} >
+                                States 21-30
+                            </button>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href="/test">
+                            <button onClick={() => handleTestSelection('States Test 31-40')} className={styles.testButton} >
+                                States 31-40
+                            </button>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href="/test">
+                            <button onClick={() => handleTestSelection('States Test 41-50')} className={styles.testButton} >
+                                States 41-50
+                            </button>
+                        </Link>
+                    </li>
+                    {/* <li>
+                        <Link href="/test">
+                            <button onClick={() => handleTestSelection('Spelling Test T-4')} className={styles.testButton} >
+                                List T-4
+                            </button>
+                        </Link>
+                    </li> */}
+                    {/* <li>
                         <Link href="/test">
                             <button onClick={() => handleTestSelection('Spelling Test T-5')} className={styles.testButton} >
                                 List T-5
@@ -93,14 +128,14 @@ export default function Home() {
                                 List U-2
                             </button>
                         </Link>
-                    </li>
-                    <li>
+                    </li> */}
+                    {/* <li>
                         <Link href="/test">
                             <button onClick={() => handleTestSelection('Spelling Test U-3')} className={styles.testButton} >
                                 List U-3
                             </button>
                         </Link>
-                    </li>
+                    </li> */}
                 </ul>
                 {/* <button style={{ backgroundColor: "#00DFA2", outline: "none", border: "none", padding: "0.5rem 1rem", borderRadius: "0.5rem", fontSize: "2rem" }}><Link href='/test'>GO</Link></button> */}
 

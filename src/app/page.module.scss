@@ -5,7 +5,7 @@
     min-height: 100vh;
 }
 
-.main{
+.main {
     background: var(--primaryDark);
     width: 500px;
     height: 700px;
@@ -22,23 +22,24 @@
     flex: 1;
 }
 
-.directionsRow{
+.directionsRow {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+
     .directionsImg1 {
         transform: scaleX(-1);
     }
 }
 
-.testButton{
-background-color: var(--primaryAccent);
- outline: none; 
- border: none; 
- padding: 0.5rem 1rem; 
- border-radius: 0.5rem; 
- font-size: 2rem; 
- cursor: pointer;
+.testButton {
+    background-color: var(--primaryAccent);
+    outline: none;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 2rem;
+    cursor: pointer;
 }
 
 .directionsList {
@@ -48,6 +49,10 @@ background-color: var(--primaryAccent);
 }
 
 .testButtonList {
+    // display: grid;
+    // grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); // Adjust the size as needed
+    // gap: 1.5rem;
+    // margin-top: 4rem;
     display: flex;
     flex-direction: column;
     gap: 2rem;
@@ -63,11 +68,13 @@ background-color: var(--primaryAccent);
     justify-content: center;
     gap: 2rem;
     bottom: 0;
-    width: 100%; 
-    img{
+    width: 100%;
+
+    img {
         border-radius: 50%;
     }
 }
+
 @media (max-width: 575.98px) {
     .main {
         margin: 0px;

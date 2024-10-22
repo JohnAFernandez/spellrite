@@ -6,6 +6,7 @@ import { T5 } from '@/lists/T5.js';
 import { U1 } from '@/lists/U1.js';
 import { U2 } from '@/lists/U2.js';
 import { U3 } from '@/lists/U3.js';
+import { states1, states2, states3, states4, states5 } from '@/lists/States.js'
 
 import { convertTo16kHz } from '../utils/audioConversion.js'
 
@@ -55,6 +56,18 @@ const Page = () => {
             setCurrentList(U2);
         } else if (test === 'Spelling Test U-3') {
             setCurrentList(U3);
+        } else if (test === 'States Test 1-10') {
+            setCurrentList(states1);
+        } else if (test === 'States Test 11-20') {
+            setCurrentList(states2);
+        } else if (test === 'States Test 21-30') {
+            setCurrentList(states3);
+        } else if (test === 'States Test 31-40') {
+            setCurrentList(states4);
+        } else if (test === 'States Test 41-50') {
+            setCurrentList(states5);
+        } else {
+            setCurrentList(states1);
         }
     }, [test]);
 
@@ -458,18 +471,18 @@ const Page = () => {
             {
                 !isTesting && !showScore &&
                 <footer className={styles.footer}>
-                <div className={styles.imageDiv} >
-                    <Image
-                        aria-hidden
-                        src="/assets/lacey_no_bg.png"
-                        alt="Globe icon"
-                        width={55}
-                        height={55}
-                    />
-                </div>
-                <div>Mrs. Hvattum&apos;s 5th Grade →</div>
-                {/* </a> */}
-            </footer>
+                    <div className={styles.imageDiv} >
+                        <Image
+                            aria-hidden
+                            src="/assets/lacey_no_bg.png"
+                            alt="Globe icon"
+                            width={55}
+                            height={55}
+                        />
+                    </div>
+                    <div>Mrs. Hvattum&apos;s 5th Grade →</div>
+                    {/* </a> */}
+                </footer>
             }
         </div>
     )
