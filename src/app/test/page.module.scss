@@ -168,7 +168,8 @@
 }
 
 .clearButton {
-    color: var(--lightText);
+    // color: var(--lightText);
+    color: var(--secondaryDark);
     position: relative;
     transform: translateX(-33px);
     background: none;
