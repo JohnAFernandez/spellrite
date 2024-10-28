@@ -306,28 +306,36 @@ const Page = () => {
     const handleNextWord = () => {
         if (!isTesting) return;
         if (userInput.trim().length < 1) return;
-        if (wordCount >= currentList.length - 1) {
+
+        // just in case, still change states if wordCount is too large but we fell into an edge case
+        if (wordCount >= currentList.length) {
             setIsTesting(false);
             setShowScore(true);
-            setMainBtnMessage('Test Again')
+            setMainBtnMessage('Test Again');
+            return;
         }
 
         setUserWordList((prevList) => [...prevList, userInput]);
         console.log("userword: ", userInput, "currentWord: ", currentWord);
         if (userInput.trim().toLowerCase() === currentWord.toLowerCase()) {
             setScore((prevScore) => prevScore + 1);
-            console.log("userword: ", userInput, "currentWord: ", currentWord);
+            console.log(`Correct! New Score: ${score}`);
         }
 
-        if (wordCount < currentList.length) {
-            setCurrentWord(currentList[wordCount + 1]);
-            setWordCount((prevCount) => prevCount + 1);
+        // These values will not matter if we go out of bounds.
+        setCurrentWord(currentList[wordCount + 1]);
+        setWordCount((prevCount) => prevCount + 1);
+        setUserInput('');
+
+        // still within the limit?  Play the next word.
+        if (wordCount < currentList.length - 1) {
             playWord(currentList[wordCount + 1]);
-            setUserInput('');
-            console.log(`Correct! New Score: ${score}`);
+        // otherwise end the game
         } else {
             console.log('you finished the test! Final score: ', score);
             setIsTesting(false);
+            setShowScore(true);
+            setMainBtnMessage('Test Again');
         }
         if (inputRef.current) {
             inputRef.current.focus();
